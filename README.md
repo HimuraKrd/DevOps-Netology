@@ -1,4 +1,110 @@
 # DevOps-Netology
+
+Часть 2.4
+
+1. Найдите полный хеш и комментарий коммита, хеш которого начинается на aefea.
+Быстрый вариант: 
+$git show aefea
+полный хэш: aefead2207ef7e2aa5dc81a34aedf0cad4c32545
+комментарий: Update CHANGELOG.md
+
+Долгий вариант:
+git rev-parse aefea #находим полный коммит
+_aefead2207ef7e2aa5dc81a34aedf0cad4c32545_
+git show aefead2207ef7e2aa5dc81a34aedf0cad4c32545
+
+_commit aefead2207ef7e2aa5dc81a34aedf0cad4c32545
+Author: Alisdair McDiarmid <alisdair@users.noreply.github.com>
+Date:   Thu Jun 18 10:29:58 2020 -0400
+
+_    Update CHANGELOG.md
+
+_diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 86d70e3e0..588d807b1 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -27,6 +27,7 @@ BUG FIXES:
+ * backend/s3: Prefer AWS shared configuration over EC2 metadata credentials by default ([#25134](https://github.com/hashicorp/terraform/issues/25134))
+ * backend/s3: Prefer ECS credentials over EC2 metadata credentials by default ([#25134](https://github.com/hashicorp/terraform/issues/25134))
+ * backend/s3: Remove hardcoded AWS Provider messaging ([#25134](https://github.com/hashicorp/terraform/issues/25134))
++* command: Fix bug with global `-v`/`-version`/`--version` flags introduced in 0.13.0beta2 [GH-25277]
+ * command/0.13upgrade: Fix `0.13upgrade` usage help text to include options ([#25127](https://github.com/hashicorp/terraform/issues/25127))
+ * command/0.13upgrade: Do not add source for builtin provider ([#25215](https://github.com/hashicorp/terraform/issues/25215))
+ * command/apply: Fix bug which caused Terraform to silently exit on Windows when using absolute plan path ([#25233](https://github.com/hashicorp/terraform/issues/25233))
+
+
+2. Какому тегу соответствует коммит 85024d3?
+$git show 85024d3
+тег: 85024d3100126de36331c6982bfaac02cdab9e76 (tag: v0.12.23)
+
+Долгий вариант по аналогии с заданием #1 :)
+
+
+3. Сколько родителей у коммита b8d720? Напишите их хеши.
+$git show b8d720^0
+b8d720f83
+$git show b8d720^1
+56cd785
+$git show b8d720^2
+9ea88f2
+
+git rev-list --parents -n 1 b8d720
+b8d720f8340221f2146e4e4870bf2ee0bc48f2d5 56cd7859e05c36c06b56d013b55a252d0bb7e158 9ea88f22fc6269854151c571162c5bcf958bee2b
+
+
+4. Перечислите хеши и комментарии всех коммитов которые были сделаны между тегами v0.12.23 и v0.12.24.
+git log v0.12.23...v0.12.24 --oneline
+33ff1c03b (tag: v0.12.24) v0.12.24
+b14b74c49 [Website] vmc provider links
+3f235065b Update CHANGELOG.md
+6ae64e247 registry: Fix panic when server is unreachable
+5c619ca1b website: Remove links to the getting started guide's old location
+06275647e Update CHANGELOG.md
+d5f9411f5 command: Fix bug when using terraform login on Windows
+4b6d06cc5 Update CHANGELOG.md
+dd01a3507 Update CHANGELOG.md
+225466bc3 Cleanup after v0.12.23 release
+
+
+5. Найдите коммит в котором была создана функция func providerSource, ее определение в коде выглядит так func providerSource(...) (вместо троеточего перечислены аргументы).
+Два варианта: поиск через git grep -S "providerSource", после чего поиск через git show по всем коммитам (или посмотреть на время самого раннего) :)
+Второй вариант более длинный: через git grep "providerSource" найти все моменты вхождения функции, после чего сделать git log -L :providerSource:"file_name" и посмотреть на diff.
+Оба варианта приведут к тому, что самыый ранний коммит с этой функцией : 8c928e83589d90a031f811fae52a81be7153e82f
+
+6. Найдите все коммиты в которых была изменена функция globalPluginDirs.
+По аналогии с 5-м заданием пытался проверить вывод двух комманд. И тут пошли сильные различия:
+по первому варианту вывод получается следующим:
+git log -S 'globalPluginDirs'
+commit 8364383c359a6b738a436d1b7745ccdce178df47
+commit c0b17610965450a89598da491ce9b6b5cbd6393f
+commit 35a058fb3ddfae9cfee0b3893822c9a95b920f4c
+
+По второму варианту:
+git grep "globalPluginDirs"
+commands.go:    GlobalPluginDirs: globalPluginDirs(),
+commands.go:    helperPlugins := pluginDiscovery.FindPlugins("credentials", globalPluginDirs())
+internal/command/cliconfig/config_unix.go:              // FIXME: homeDir gets called from globalPluginDirs during init, before
+plugins.go:// globalPluginDirs returns directories that should be searched for
+plugins.go:func globalPluginDirs() []string {
+
+$ git log -L :globalPluginDirs:commands.go
+fatal: -L parameter 'globalPluginDirs' starting at line 1: no match
+аналогичный вывод по internal/command/cliconfig/config_unix.go
+$ git log -L :globalPluginDirs:plugins.go
+commit 8364383c359a6b738a436d1b7745ccdce178df47
+commit 66ebff90cdfaa6938f26f908c7ebad8d547fea17
+commit 41ab0aef7a0fe030e84018973a64135b11abcd70
+commit 52dbf94834cb970b510f2fba853a5b49ad9b1a46
+commit 78b12205587fe839f10d946ea3fdc06719decb05
+
+7. Кто автор функции synchronizedWriters?
+git log --pretty=format:"%h : %an" -S 'synchronizedWriters'
+bdfea50cc : James Bardin
+fd4f7eb0b : James Bardin
+5ac311e2a : Martin Atkins
+
+
+
 First line to edit
 Second line
 
