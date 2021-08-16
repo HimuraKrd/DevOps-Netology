@@ -10,7 +10,7 @@
 
 ## 3. Какой процесс с PID 1 является родителем для всех процессов в вашей виртуальной машине Ubuntu 20.04?
 Выполним ``pstree -p`` и получим результат systemd(1)  
-![task_2_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/2.1%20grep%20sample2.png) 
+![task_2_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/pstree%20-p.png) 
 
 ## 4. Как будет выглядеть команда, которая перенаправит вывод stderr ls на другую сессию терминала?
 ``ls /non_existing_folder 2> /dev/pts/#``  
@@ -42,6 +42,8 @@ stderr имеет параметр 2, поэтому нам необходимо
 
 
 ## 10. Используя ``man``, опишите что доступно по адресам ``/proc/<PID>/cmdline``, ``/proc/<PID>/exe``.
+В ``/proc/<PID>/cmdline`` находится командная строка, вызывающая процесс ``<PID>`` процесс.
+В ``/proc/<PID>/exe`` содержится символьная ссылка на исполняемый файл, который запустил процесс. 
 
 
 ## 11. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью ``/proc/cpuinfo``.
@@ -57,7 +59,12 @@ stderr имеет параметр 2, поэтому нам необходимо
 ![task_12](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/12.png)
 
 ## 13. Бывает, что есть необходимость переместить запущенный процесс из одной сессии в другую. Попробуйте сделать это, воспользовавшись ``reptyr``. Например, так можно перенести в screen процесс, который вы запустили по ошибке в обычной SSH-сессии.
-
+Команда отрабатывает прекрасно, с одним лишь но : терминал, из которого мы перемещаем процесс, намертво зависает. Я пробовал различные процессы (остановленные job-ы, программу из запроса выше и т.д.): 
+![task_13_original_man_kill](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/13_original_man_kill.png)  
+Ещё одной интересной особенностью, которую я увидел, стало то, что PTY не может вытянуть данные из TTY сессии:  
+![task_13_original](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/13_original.png)  
+![task_13_](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/13_original_man_kill.png)
 
 ## 14. ``sudo echo string > /root/new_file`` не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без ``sudo`` под вашим пользователем. Для решения данной проблемы можно использовать конструкцию ``echo string | sudo tee /root/new_file``. Узнайте что делает команда ``tee`` и почему в отличие от ``sudo echo`` команда с ``sudo tee`` будет работать.
-``tee`` используется для перенаправления потока ввода в вывод. 
+``tee`` используется для перенаправления потока ввода в вывод. Команда не является встроенной в оболочку bash ``tee is /usr/bin/tee``, которая запускается при старте системы, поэтому для её работы root-прав не требуется не требуется.  
+![task_14](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/14.png)
