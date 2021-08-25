@@ -58,12 +58,14 @@ Cоздаем файл с настройками:
 
 ## 6. Запустите любой долгоживущий процесс (не ``ls``, который отработает мгновенно, а, например, ``sleep 1h``) в отдельном неймспейсе процессов; покажите, что ваш процесс работает под ``PID 1`` через ``nsenter``. Для простоты работайте в данном задании под ``root`` (``sudo -i``). Под обычным пользователем требуются дополнительные опции (``--map-root-user``) и т.д.
 
-Запустим ``top`` в новом неймспейсе, используя команду ``unshare -fp --mount-proc htop``(взято из примера по ``man unshare``).  
+Запустим ``htop`` в новом неймспейсе, используя команду ``unshare -fp --mount-proc htop``(взято из примера по ``man unshare``).  
 ![task_6_unshare](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/6_unshare_namespace.png)  
 Найдём через ``ps aux | grep htop`` наш процесс:  
 ![task_6_ps_aux](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/6_ps_aux.png)  
 Используя команду ``nsenter -t 2104 -p --mount``, откроем новый нэймспейс и посмотрим, какие в нём есть процессы: 
-![task_6_final](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/6_open_new_namespace.png)
+![task_6_final](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/6_open_new_namespace.png)  
+Вывод в ``htop`` также изменится и в нём появится ``bash``:  
+![task_6_htop](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/6_htop_output.png)
 
 ## 7. Найдите информацию о том, что такое ``:(){ :|:& };:``. Запустите эту команду в своей виртуальной машине Vagrant с Ubuntu 20.04 (это важно, поведение в других ОС не проверялось). Некоторое время все будет "плохо", после чего (минуты) – ОС должна стабилизироваться. Вызов ``dmesg`` расскажет, какой механизм помог автоматической стабилизации. Как настроен этот механизм по-умолчанию, и как изменить число процессов, которое можно создать в сессии?
 Гугл подсказал, что ``:(){ :|:& };:`` - так называемая fork bomb - функция, которая вызывает сама себя и плодит процессы. Последней строкой в ``dmesg`` была информация, о том, что ``[ 4116.040020] cgroup: fork rejected by pids controller in /user.slice/user-1000.slice/session-3.scope``. Как я понимаю, здесь мы возвращаемся к параметрам из задания 5. Посмотрим на другие лимиты в системе, используя ``ulimit --help`` и среди них найдём параметр ``-u``, отвечающий за количество процессов. Гугл также подсказал, что изменить ограничения можно путём коррективки файла ``/etc/security/limits.conf file`` и его параметра ``nproc – max number of processes``.
