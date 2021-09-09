@@ -37,7 +37,7 @@
 Наибольшая задержка после нескольких прогонов программы на участки ``172.253.65.82``.
 
 ## 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой dig
-![task_7](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/8.png)
+![task_7](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/7.png)
 
 ## 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой dig
 ![task_8](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/8.png)
