@@ -135,3 +135,4 @@ while (True):
   sleep(1) 
 ```
 Результат выполнения программы:  
+![task_4_output](https://user-images.githubusercontent.com/68470186/136032158-874feff3-62cd-408f-860c-ff644a86bb9c.png)
