@@ -18,13 +18,15 @@
 ```json
 { "info" : "Sample JSON output from our service\\t", #пропущено экранирование специального символа \t
     "elements" :[
-        { "name" : "first",
-        "type" : "server",
-        "ip" : 7175
+        { 
+          "name" : "first",
+          "type" : "server",
+          "ip" : 7175
         },
-        { "name" : "second",
-        "type" : "proxy",
-        "ip" : "71.78.22.43" #пропущены закрывающие кавычки и экранирование IP адреса
+        {
+          "name" : "second",
+          "type" : "proxy",
+          "ip" : "71.78.22.43" #пропущены закрывающие кавычки и экранирование IP адреса
         }
     ]
 }
