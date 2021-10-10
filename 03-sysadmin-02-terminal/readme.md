@@ -1,16 +1,22 @@
+# Домашнее задание к занятию "3.2. Работа в терминале, лекция 2"
+
 ## 1. Какого типа команда cd? Попробуйте объяснить, почему она именно такого типа; опишите ход своих мыслей, если считаете что она могла бы быть другого типа.
-![task_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/type%20cd.png)  
+![type cd](https://user-images.githubusercontent.com/68470186/136692671-d24befcb-4348-4c11-a34c-a281f0a93aec.png)
+ 
 Команда cd относится к встроенным командам оболочки и без неё работать не может. Она не является самостоятельной программой и не может выполняться отдельно. Остальную часть вопроса, к сожалению, не понял :-(
 
 ## 2. Какая альтернатива без pipe команде grep <some_string> <some_file> | wc -l? man grep поможет в ответе на этот вопрос. Ознакомьтесь с документом о других подобных некорректных вариантах использования pipe.
 Поиск по ``man wc -l``  выдал информацию, что данная команда, с аттрибутом ``-l``, используется для вывода количества вхождений того, что мы передаём в strout grep-а. У grep есть собственный параметр, отвечающий за аналогичный вывод ``-c``. Для примера создадим файл и заполним его информацией.   
-![task_2_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/2.1%20grep%20sample1.png)  
+![2 1 grep sample1](https://user-images.githubusercontent.com/68470186/136692678-dc4737b0-f4a2-41cd-a95a-61cdab9926d0.png)
+
 Поищем при помощи ``grep`` попадение по ``line`` и сравним результаты  
-![task_2_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/2.1%20grep%20sample2.png) 
+![2 1 grep sample2](https://user-images.githubusercontent.com/68470186/136692684-5b8932d0-2c73-424f-824f-ff822bfbba58.png)
+
 
 ## 3. Какой процесс с PID 1 является родителем для всех процессов в вашей виртуальной машине Ubuntu 20.04?
 Выполним ``pstree -p`` и получим результат systemd(1)  
-![task_2_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/pstree%20-p.png) 
+![pstree -p](https://user-images.githubusercontent.com/68470186/136692688-d71ac383-153a-46a8-bdd2-cd89963333f7.png)
+
 
 ## 4. Как будет выглядеть команда, которая перенаправит вывод stderr ls на другую сессию терминала?
 ``ls /non_existing_folder 2> /dev/pts/#``  
@@ -23,18 +29,21 @@ stderr имеет параметр 2, поэтому нам необходимо
 
 ## 6. Получится ли вывести находясь в графическом режиме данные из PTY в какой-либо из эмуляторов TTY? Сможете ли вы наблюдать выводимые данные?
 Да, конечно :) Больше деталей на скриншоте :)  
-![task_6](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/6.png)
+![6](https://user-images.githubusercontent.com/68470186/136692695-7b8c01e2-a6c7-47f9-837d-f4a71abeae14.png)
+
 
 
 ## 7. Выполните команду ``bash 5>&1``. К чему она приведет? Что будет, если вы выполните ``echo netology > /proc/$$/fd/5``? Почему так происходит?
 Выполнение данной команды приведёт к созданию нового "дискриптора" 5, в который будет выведет поток вывода (stdout). Вторая команда аналогична ``echo netology``, и выводит поток дискриптора 5.  
-![task7](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/7.png)
+![7](https://user-images.githubusercontent.com/68470186/136692725-168ff4ba-e4ef-434e-9a2c-d1b3544e0317.png)
+
 
 
 ## 8. Получится ли в качестве входного потока для pipe использовать только stderr команды, не потеряв при этом отображение stdout на pty? Напоминаем: по умолчанию через pipe передается только stdout команды слева от ``|`` на stdin команды справа. Это можно сделать, поменяв стандартные потоки местами через промежуточный новый дескриптор, который вы научились создавать в предыдущем вопросе.
 Воспользуемя потоком 5, созданным в задании 7. Перенаправим вывод следующим образом: в поток 5 мы перенаправляем ``stdout``, ``stdin`` перенаправляем в ``stderr``, а ``stderr`` в вновь созданный поток 5. Если мы вызовем какую-нибудь ошибку > результат (stderr) будет записан в файл, при этом мы получим отображение ошибки на экране :
-![task_8.1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/8.1.png)  
-![task_8.1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/8.2.png)
+![8 1](https://user-images.githubusercontent.com/68470186/136692732-f1b3a84d-ac08-4d29-82df-b968797c6d93.png)
+![8 2](https://user-images.githubusercontent.com/68470186/136692735-b28dbcd4-6865-468d-b703-8f3e8ffe06f1.png)
+
 
 
 ## 9. Что выведет команда ``cat /proc/$$/environ``? Как еще можно получить аналогичный по содержанию вывод?
@@ -48,7 +57,8 @@ stderr имеет параметр 2, поэтому нам необходимо
 
 ## 11. Узнайте, какую наиболее старшую версию набора инструкций SSE поддерживает ваш процессор с помощью ``/proc/cpuinfo``.
 Самая старшая версия 4_2. Можно искать через grep SSE с флагом ``-i``
-![task11](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/11.png)
+![11](https://user-images.githubusercontent.com/68470186/136692737-c3c8abd4-7357-4721-ba0f-ff639dbf2349.png)
+
 
 ## 12. При открытии нового окна терминала и vagrant ssh создается новая сессия и выделяется pty. Это можно подтвердить командой tty, которая упоминалась в лекции 3.2.   
 Однако:  
@@ -56,15 +66,17 @@ stderr имеет параметр 2, поэтому нам необходимо
 ``not a tty``  
 Почитайте, почему так происходит, и как изменить поведение.  
 Насколько я понял логику задания - мы должны из виртуальной машины (интерфейс tty) должны ввести команду ``ssh localhost 'tty``. Только так у меня получилось добиться вывода ``not a tty``. Если я правильно понимаю суть задания - при попытке установить ssh соединение мы используем PTY, а ну TTY. Чтобы избежать ошибки можно убрав ``tty`` > тогда соединение будет устанавливаться по ssh и будет зайдействован PTY > соединение будет установлено корректно.
-![task_12](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/12.png)
+![12](https://user-images.githubusercontent.com/68470186/136692741-817b3308-208c-48fa-823a-89eccc89a935.png)
+
 
 ## 13. Бывает, что есть необходимость переместить запущенный процесс из одной сессии в другую. Попробуйте сделать это, воспользовавшись ``reptyr``. Например, так можно перенести в screen процесс, который вы запустили по ошибке в обычной SSH-сессии.
 Команда отрабатывает прекрасно, с одним лишь но : терминал, из которого мы перемещаем процесс, намертво зависает. Я пробовал различные процессы (остановленные job-ы, программу из запроса выше и т.д.): 
-![task_13_original_man_kill](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/13_original_man_kill.png)  
+![13_original_man_kill](https://user-images.githubusercontent.com/68470186/136692791-54336e7f-1dba-470e-8d02-455f3123a128.png)
+
 Ещё одной интересной особенностью, которую я увидел, стало то, что PTY не может вытянуть данные из TTY сессии:  
-![task_13_original](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/13_original.png)  
-![task_13_](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/13_original_man_kill.png)
+![13_original](https://user-images.githubusercontent.com/68470186/136692793-887d552f-157f-42c1-b6dc-51355bd5a9e3.png)
+![13_original_man_kill](https://user-images.githubusercontent.com/68470186/136692791-54336e7f-1dba-470e-8d02-455f3123a128.png)
 
 ## 14. ``sudo echo string > /root/new_file`` не даст выполнить перенаправление под обычным пользователем, так как перенаправлением занимается процесс shell'а, который запущен без ``sudo`` под вашим пользователем. Для решения данной проблемы можно использовать конструкцию ``echo string | sudo tee /root/new_file``. Узнайте что делает команда ``tee`` и почему в отличие от ``sudo echo`` команда с ``sudo tee`` будет работать.
 ``tee`` используется для перенаправления потока ввода в вывод. Команда не является встроенной в оболочку bash ``tee is /usr/bin/tee``, которая запускается при старте системы, поэтому для её работы root-прав не требуется не требуется.  
-![task_14](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%202)/images/14.png)
+![14](https://user-images.githubusercontent.com/68470186/136692805-aee0262f-6aff-4386-b576-7adefd73708b.png)
