@@ -1,6 +1,7 @@
 ## 1. Какой системный вызов делает команда ``cd``? В прошлом ДЗ мы выяснили, что ``cd`` не является самостоятельной программой, это ``shell builtin``, поэтому запустить strace непосредственно на cd не получится. Тем не менее, вы можете запустить ``strace на /bin/bash -c 'cd /tmp'``. В этом случае вы увидите полный список системных вызовов, которые делает сам ``bash`` при старте. Вам нужно найти тот единственный, который относится именно к ``cd``.  
 
-![task_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/1.png)  
+![1](https://user-images.githubusercontent.com/68470186/136692450-065d1e1a-d68e-42a8-ae0f-42ae309e3e7e.png)
+  
 Я так и не понял смысла задания и принципа работы strace... Получается, надо просто просматривать весь результат вывода и искать нужные строки? Если так, то ответом на задание будет ``chdir("temp")``.  
 
 
@@ -13,20 +14,25 @@
 ``/bin/bash: ELF 64-bit LSB shared object, x86-64``
 ## Используя strace выясните, где находится база данных file на основании которой она делает свои догадки.
 Я ОЧЕНЬ долго сравнивал файлы и единственным общим, что я нашёл, было обращение к ``magic``:  
-![task_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/2.png)  
+![2](https://user-images.githubusercontent.com/68470186/136692451-6a4d7208-4556-4d3f-a5d7-a23317aad09d.png)
+  
 Предположу, что это или ``openat(AT_FDCWD, "/usr/share/misc/magic.mgc", O_RDONLY) = 3`` или ``openat(AT_FDCWD, "/etc/magic", O_RDONLY) = 3``.  
 Прошу помощи с этим заданием. Я не понимаю алгоритм, как решать подобные задачи...
 
 
 ## 3. Предположим, приложение пишет лог в текстовый файл. Этот файл оказался удален (deleted в lsof), однако возможности сигналом сказать приложению переоткрыть файлы или просто перезапустить приложение – нет. Так как приложение продолжает писать в удаленный файл, место на диске постепенно заканчивается. Основываясь на знаниях о перенаправлении потоков предложите способ обнуления открытого удаленного файла (чтобы освободить место на файловой системе).
 Сделаем ``top > proverka``. В другом терминале откроем сессию и через lsof увидим, что есть файл, в который пишется результат: 
-![task_3_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/3.1%20-%20lsof.png)  
+![3 1 - lsof](https://user-images.githubusercontent.com/68470186/136692468-fd076258-89b0-42ba-98bf-0d316210a25d.png)
+
 И он постоянно растёт:  
-![task_3_1-file-size](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/3.1%20-%20file%20size%20growing.png)  
+![3 1 - file size growing](https://user-images.githubusercontent.com/68470186/136692471-262ce248-a47f-4c9b-84cf-8b8d3a6ee005.png)
+ 
 Удалим файл, используя команду ``rm proverka``.
-![task_3_1_lsof_deleted](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/3.1%20-%20lsof%20deleted.png)  
+![3 1 - lsof deleted](https://user-images.githubusercontent.com/68470186/136692475-f7faeeda-0070-4ce5-b103-4d4fb5a75474.png)
+ 
 Попробуем открыть процесс, зная PID из команды выше ``nano /proc/1279/fd/1``. Используем ``/fd/1``, так как перенаправляем ``stdout`` (1) в файл proverka.  
-![task_3_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/3.1%20-%20cat%20file.png)  
+![3 1 - cat file](https://user-images.githubusercontent.com/68470186/136692476-36360132-e2dc-4248-90fc-855b6c99e991.png)
+ 
 Гугл подсказал, что одним и способов обнуления файла является контрукция ``cat /dev/null > /proc/1279/fd/1``. 
 
 
@@ -38,16 +44,19 @@
 ``root@vagrant:~# dpkg -L bpfcc-tools | grep sbin/opensnoop``
 ``/usr/sbin/opensnoop-bpfcc``
 ## На какие файлы вы увидели вызовы группы ``open`` за первую секунду работы утилиты? Воспользуйтесь пакетом ``bpfcc-tools`` для Ubuntu 20.04. 
-![task_5](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/5.png)  
+![5](https://user-images.githubusercontent.com/68470186/136692481-f9122df2-7ebf-4bbb-950d-5e9db176c12e.png)
+
 К сожалению, я не уверен, что понял задачу правильно... Если это не то, что требуется - укажите, пожалуйста, в комментариях :-)  
 
 ## 6. Какой системный вызов использует ``uname -a``? Приведите цитату из man по этому системному вызову, где описывается альтернативное местоположение в ``/proc``, где можно узнать версию ядра и релиз ОС.
 Выполняем ``strace uname``  
-![task_6_strace_uname](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/6%20-%20strace.png)  
+![6 - strace](https://user-images.githubusercontent.com/68470186/136692485-3d26f121-1db2-49aa-91ec-dce882dadcd1.png)
+ 
 И находим в нём строку:  
 ``uname({sysname="Linux", nodename="vagrant", ...}) = 0``  
 Затем выполняем ``man proc`` (либо через ``| grep version``) и находим:  
-![task_6](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/6.png)  
+![6](https://user-images.githubusercontent.com/68470186/136692498-dfbef9b4-336b-417b-b912-4c30271b92e6.png)
+
 И видим на 2833 строке нужныый ответ (надеюсь..)
 В ``man`` по ``uname`` была информация, что есть ещё ``uname(2)``, но как бы я не старался, у меня не получилось вызвать мануал, но в интернете нашёл следующую инфу, которая также может быть ответом на вопрос:  
 ``       Part of the utsname information is also accessible via
@@ -74,7 +83,9 @@
 
 # 9. Используя ``-o stat`` для ``ps``, определите, какой наиболее часто встречающийся статус у процессов в системе. В ``man ps`` ознакомьтесь ``(/PROCESS STATE CODES)`` что значат дополнительные к основной заглавной буквы статуса процессов. Его можно не учитывать при расчете (считать ``S``, ``Ss`` или ``Ssl`` равнозначными).
 Используя ``man``к ``ps`` и гугл, нашёл параметры ``-axo``, отображающие все статусы процессов. Список состояния процессов изображён ниже:  
-![task_9](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/9_process_state_code.png)  
+![9_process_state_code](https://user-images.githubusercontent.com/68470186/136692514-68a0ede5-bff5-4a12-af53-4944c4ca53a0.png)
+ 
 Итого получаем:  
-![task_9_result](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9E%D0%BF%D0%B5%D1%80%D0%B0%D1%86%D0%B8%D0%BE%D0%BD%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/9_result.png)  
+![9_result](https://user-images.githubusercontent.com/68470186/136692520-eeb110ca-5de5-40b7-b095-ca0e682c9000.png)
+ 
 Больше всего процессов ``S - interruptible sleep``.
