@@ -13,12 +13,13 @@
     end    
 ## 7. Команда vagrant ssh из директории, в которой содержится Vagrantfile, позволит вам оказаться внутри виртуальной машины без каких-либо дополнительных настроек. Попрактикуйтесь в выполнении обсуждаемых команд в терминале Ubuntu.
 
-![Результат подключения по SSH](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/ssh%20login.png)  
+![ssh login](https://user-images.githubusercontent.com/68470186/136691779-f0b33424-0bbe-45e5-be24-2e530addf16a.png)
 
 ## 8. Ознакомиться с разделами man bash, почитать о настройках самого bash:
 
 * какой переменной можно задать длину журнала history, и на какой строчке manual это описывается?  
-![Ответ](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/histsize.png)  
+![histsize](https://user-images.githubusercontent.com/68470186/136691763-9a9c5a24-5bd3-4b3c-a925-c1eaefc88b9a.png)
+
 Команда HISTSIZE, строка 862.  
 * что делает директива ignoreboth в bash?  
 Директива ignoreboth дополняет возможности команды HISTCONTROL (833 строка) и позволяет исключить из истории строки, начинающиеся с пробелов (ignorespace), а также повторы строк (ignoredups).  
@@ -34,7 +35,8 @@
 Выражение должно проверить существует ли ``/tmp`` и является ли каталогом (флаг -d) и вернуть true или false.  
   
 ## 12. Основываясь на знаниях о просмотре текущих (например, PATH) и установке новых переменных; командах, которые мы рассматривали, добейтесь в выводе type -a bash в виртуальной машине наличия первым пунктом в списке ``bash is /tmp/new_path_directory/bash``.
-![Задача 12](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%B2%20%D1%82%D0%B5%D1%80%D0%BC%D0%B8%D0%BD%D0%B0%D0%BB%D0%B5%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/PATH.png)
+![PATH](https://user-images.githubusercontent.com/68470186/136691771-0d210722-37c9-4b65-a109-6dd818c10a23.png)
+
 
 ## 13. Чем отличается планирование команд с помощью batch и at?
 ``at`` - выполняет команду в определённый момент времени;  
