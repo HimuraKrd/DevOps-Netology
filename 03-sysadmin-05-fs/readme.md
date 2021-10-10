@@ -1,3 +1,5 @@
+# Домашнее задание к занятию "3.5. Файловые системы"
+
 ## 2. Могут ли файлы, являющиеся жесткой ссылкой на один объект, иметь разные права доступа и владельца? Почему?
 Нет, т.к. жесткая ссылка полностью аналогична файлу, на который создана и включает те же разрешения, что выставлены на оригинальном файле.
 
@@ -6,25 +8,30 @@
 
 ## 4. Используя fdisk, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
 Используем ``lsblk`` найдём нужные нам устройства, а потом при помощи ``fdisk /dev/sdb`` начнём творить магию :)   
-![task4](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/4.png)  
+![4](https://user-images.githubusercontent.com/68470186/136692875-fe22f428-bf05-4aea-a795-14527c5bcbe8.png)
+
 При помощи ``w`` записываем изменения.
 
 ## 5. Используя sfdisk, перенесите данную таблицу разделов на второй диск.
-![task_5](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/5.png)
+![5](https://user-images.githubusercontent.com/68470186/136692877-b79a234e-118b-4cc0-a7d5-6e14d2d2dac0.png)
+
 
 ## 6. Соберите mdadm RAID1 на паре разделов 2 Гб.
 Посмотрим информацию о устройствах:  
-![task_6](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/6_1.png)  
+![6_1](https://user-images.githubusercontent.com/68470186/136692880-1416ea8d-8fc6-4145-97f0-32361bbbee0c.png)
 Создадим RAID1 из нужных дисков:  
-![task_6_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/6_2.png)
+![6_2](https://user-images.githubusercontent.com/68470186/136692885-e5e533f2-ed4d-41ea-9efc-53c3e9634e33.png)
+
 
 ## 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
-![task_7](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/7.png)    
+![7](https://user-images.githubusercontent.com/68470186/136692888-2a687a5a-ffd7-4f9d-8563-ca649496ac1d.png)
+
 Посмотрим итоговый результат после выполнения задач 6 и 7:  
-![task_7](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/7_1.png)
+![7_1](https://user-images.githubusercontent.com/68470186/136692889-43cb3e65-a4f6-49f4-804f-7863a53fa28c.png)
 
 ## 8. Создайте 2 независимых PV на получившихся md-устройствах.
-![task_8](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/8.png)
+![8](https://user-images.githubusercontent.com/68470186/136692891-e6019962-3515-4544-9466-f5e28981d9a1.png)
+
 
 ## 9. Создайте общую volume-group на этих двух PV.
 К сожалению, забыл сделать скриншот выполнения команды, поэтому просто напишу код тут:  
@@ -32,36 +39,37 @@
 Результат вывода можно посмотреть при помощи команды ``pvdisplay``
 
 ## 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
-![task_10](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/10.png)
+![10](https://user-images.githubusercontent.com/68470186/136692894-e248a126-a029-4e0c-b7ba-b2c36228a000.png)
+
 
 ## 11. Создайте mkfs.ext4 ФС на получившемся LV.
 Используя ``lvdisplay`` узнаем путь к созданному логическому тому и выполним задачу:  
-![task_11](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/11.png)
+![11](https://user-images.githubusercontent.com/68470186/136692900-b70cc474-5f05-4311-9d19-4b774cc5b59d.png)
 
 ## 12. Смонтируйте этот раздел в любую директорию, например, /tmp/new.
-![task_12](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/12.png)
+![12](https://user-images.githubusercontent.com/68470186/136692902-f3ca7370-454a-4953-b107-cd1091aab638.png)
 
 ## 13. Поместите туда тестовый файл, например wget https://mirror.yandex.ru/ubuntu/ls-lR.gz -O /tmp/new/test.gz.
-![task_13](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/13.png)
+![13](https://user-images.githubusercontent.com/68470186/136692904-96151722-7b09-4b83-a3cd-0d122e8ec8a8.png)
 
 ## 14. Прикрепите вывод lsblk.
-![task_14](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/14.png)
+![14](https://user-images.githubusercontent.com/68470186/136692910-aab110bd-eb1d-462e-b040-2e6a99a23a16.png)
 
 ## 15. Протестируйте целостность файла:
 
 ``root@vagrant:~# gzip -t /tmp/new/test.gz``  
 ``root@vagrant:~# echo $?``  
 ``0``  
-![task_15](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/15.png)
+![15](https://user-images.githubusercontent.com/68470186/136692917-a4dcfcea-27ac-4e59-9610-5ec7169e00f8.png)
 
 ## 16. Используя pvmove, переместите содержимое PV с RAID0 на RAID1.
-![task_16](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/16.png)
+![16](https://user-images.githubusercontent.com/68470186/136692920-4de9c631-8a54-47e3-83e6-dcf1a0b8f0e7.png)
 
 ## 17. Сделайте --fail на устройство в вашем RAID1 md.
-![task_17](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/17.png)
+![17](https://user-images.githubusercontent.com/68470186/136692923-4058dc2f-9966-40a5-900f-40ff7f50745e.png)
 
 ## 18. Подтвердите выводом dmesg, что RAID1 работает в деградированном состоянии.
-![task_18](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/18.png)
+![18](https://user-images.githubusercontent.com/68470186/136692926-65cd08f0-d68a-48a6-9699-591756402f59.png)
 
 ## 19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:
-![task_19](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%A4%D0%B0%D0%B9%D0%BB%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B/images/19.png)
+![19](https://user-images.githubusercontent.com/68470186/136692941-dee0531e-7b13-4df7-b5c6-64ec12ecb083.png)
