@@ -7,37 +7,47 @@
 ``[press enter]``  
 * В ответе укажите полученный HTTP код, что он означает?  
 Результатом мы получим ответ страницы с кодом 301 ``HTTP/1.1 301 Moved Permanently`` - страница была перемещена на постоянной основе
-![task_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/1.png)
+![1](https://user-images.githubusercontent.com/68470186/136691948-2e058666-076b-4af1-bfb1-327ba548aa78.png)
 
 ## 2. Повторите задание 1 в браузере, используя консоль разработчика F12.
 * откройте вкладку Network
 * отправьте запрос http://stackoverflow.com
 * найдите первый ответ HTTP сервера, откройте вкладку Headers
 * укажите в ответе полученный HTTP код.
-![task2_1](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/2_1.png)
+![2_1](https://user-images.githubusercontent.com/68470186/136691953-87117330-7321-4f6d-a148-6786018df084.png)
+
 * проверьте время загрузки страницы, какой запрос обрабатывался дольше всего?
 * приложите скриншот консоли браузера в ответ.
-![task_2_2](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/2_2.png)
+![2_2](https://user-images.githubusercontent.com/68470186/136691955-51e732ad-884c-46c5-b864-c6ef6be0a5fc.png)
+
 
 ## 3. Какой IP адрес у вас в интернете?
 Я пользуюсь сервисом 2ip:  
-![task_3](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/3.png)  
+![3](https://user-images.githubusercontent.com/68470186/136691960-32140e96-83bd-486a-8a61-82ef06427d30.png)
+
 
 ## 4. Какому провайдеру принадлежит ваш IP адрес? Какой автономной системе AS? Воспользуйтесь утилитой whois
 Результат вывода команды ``whois`` на скриншоте ниже:  
-![task4](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/4.png)  
+![4](https://user-images.githubusercontent.com/68470186/136691966-0cf1f383-a6a6-4ce8-bddb-9a116831224f.png)
+
+
 Провайдер B2B-Telecom, номер автономной системы AS58314
 
 ## 5. Через какие сети проходит пакет, отправленный с вашего компьютера на адрес 8.8.8.8? Через какие AS? Воспользуйтесь утилитой traceroute
-![task_5](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/5_1.png)
+![5_1](https://user-images.githubusercontent.com/68470186/136691988-bf719aca-ddc3-41b8-aa6e-54646dcf8676.png)
+
 
 ## 6. Повторите задание 5 в утилите mtr. На каком участке наибольшая задержка - delay?
 Вывод команды ``mtr`` на скриншоте ниже:  
-![task_6](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/6.png)  
+![6](https://user-images.githubusercontent.com/68470186/136691999-22d98b7f-ec15-4bd9-ab53-d117a1647157.png)
+
+
 Наибольшая задержка после нескольких прогонов программы на участки ``172.253.65.82``.
 
 ## 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой dig
-![task_7](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/7.png)
+![7](https://user-images.githubusercontent.com/68470186/136692004-326ae196-ebbd-457b-b4c2-89e8c0b9ee6c.png)
+
 
 ## 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой dig
-![task_8](https://github.com/HimuraKrd/devops-netology/blob/main/%D0%9A%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5%20%D1%81%D0%B5%D1%82%D0%B8%20(%D0%BB%D0%B5%D0%BA%D1%86%D0%B8%D1%8F%201)/images/8_2.png)
+![8_2](https://user-images.githubusercontent.com/68470186/136692032-cb2fd0f0-77ee-4455-9213-97bf0e552960.png)
+
