@@ -11,3 +11,6 @@
 ![image](https://user-images.githubusercontent.com/68470186/141647963-ed75d3fe-0963-4eed-8ca0-e492821da8cc.png)  
 После чего зайдём на ресурс и проверим доступность программ:  
 ![image](https://user-images.githubusercontent.com/68470186/141647989-6e90fdc7-e301-4859-a170-eef4358516ec.png)
+
+## Задача 4: Создать вторую ВМ и подключить её к мониторингу развёрнутому на первом сервере.
+![image](https://user-images.githubusercontent.com/68470186/142290511-ec91159e-3554-4b5f-b08f-86fef5ce644e.png)
