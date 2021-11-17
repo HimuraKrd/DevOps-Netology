@@ -50,7 +50,7 @@ ogvux3la3txx   swarm_monitoring_cadvisor       global       6/6        google/ca
 ```
 docker swarm update --autolock=true
 ```
-Данная команда позволяет зашифровать обмен ключами между нодами внутри кластера, тем самым увеличивая безопасность. После включения данного параметра и перезапуска сервиса появляется следующий вывод:  
+Данная команда позволяет используется для защиты TLS и ключа для шифрования\дешифрования журналов RAFT. После ввода команды и синхронизации изменений между менеджерами в рое, в случае рестарта Docker Engine или менеджера целиком:  
 ```shell
 [centos@node01 ~]$ sudo systemctl restart docker
 [centos@node01 ~]$ sudo docker node ls
@@ -67,4 +67,4 @@ k44xt2t0kpuhkfmnfblmxkd5h     node03.netology.yc   Ready     Active         Reac
 ms7xii4zr2u6lxe0xtnfkp2zv     node05.netology.yc   Ready     Active                          20.10.10
 nyrgulv4j9k4m5pjng43l8wbj     node06.netology.yc   Ready     Active                          20.10.10
 ```
-После ввода команды ``docker swarm unlock`` на ноде, где произошёл разрыв связи, и ввода пароля (который генерируется при первом запуске ``docker swarm update --autolock=true``)  связь восстаналивается и нода снова становится рабочей.
+После ввода команды ``docker swarm unlock`` на менеджере и ввода ключа (который генерируется при первом запуске ``docker swarm update --autolock=true``)  связь восстаналивается и менеджер снова становится доступным для деплоя на него сервисов.
