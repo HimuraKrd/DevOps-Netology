@@ -50,21 +50,10 @@ ogvux3la3txx   swarm_monitoring_cadvisor       global       6/6        google/ca
 ```
 docker swarm update --autolock=true
 ```
-Данная команда позволяет используется для защиты TLS и ключа для шифрования\дешифрования журналов RAFT. После ввода команды и синхронизации изменений между менеджерами в рое, в случае рестарта Docker Engine или менеджера целиком:  
+Данная команда шифрует сертификаты всех нод дополнительным ключём. После ввода команды и синхронизации изменений между менеджерами в рое, в случае рестарта Docker Engine или менеджера целиком:  
 ```shell
 [centos@node01 ~]$ sudo systemctl restart docker
 [centos@node01 ~]$ sudo docker node ls
 Error response from daemon: Swarm is encrypted and needs to be unlocked before it can be used. Please use "docker swarm unlock" to unlock it.
 ```
-При этом данный узел изменяет статус на ``Down``:
-```shell
-[centos@node02 ~]$ sudo docker node ls
-ID                            HOSTNAME             STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
-eu4j83n8b0n2jhgigw6wta7ir     node01.netology.yc   Down      Active         Unreachable      20.10.10
-su79x2tq21anlhhscnkj085c8 *   node02.netology.yc   Ready     Active         Leader           20.10.10
-k44xt2t0kpuhkfmnfblmxkd5h     node03.netology.yc   Ready     Active         Reachable        20.10.10
-5jz1gqmjjit4d6fbm5dl54n7x     node04.netology.yc   Ready     Active                          20.10.10
-ms7xii4zr2u6lxe0xtnfkp2zv     node05.netology.yc   Ready     Active                          20.10.10
-nyrgulv4j9k4m5pjng43l8wbj     node06.netology.yc   Ready     Active                          20.10.10
-```
-После ввода команды ``docker swarm unlock`` на менеджере и ввода ключа (который генерируется при первом запуске ``docker swarm update --autolock=true``)  связь восстаналивается и менеджер снова становится доступным для деплоя на него сервисов.
+Docker демон не сможет после старта прочитать сертификат кластера и будет считаться не доступным для обработки задач кластера. После ввода команды ``docker swarm unlock`` на менеджере и ввода ключа (который генерируется при первом запуске ``docker swarm update --autolock=true``)  связь восстаналивается и менеджер снова становится доступным для деплоя на него сервисов.
