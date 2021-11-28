@@ -12,6 +12,36 @@
 * создайте пользователя test-simple-user
 * предоставьте пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE данных таблиц БД test_db
 
+Создаём пользователя test-admin-user и БД test_db команами:  
+```
+create user test-admin-user;
+create database test_db;
+```
+Создаём таблицы, используя следующие команды:
+```
+create table orders 
+(
+	ID serial primary key,
+	name VARCHAR(50),
+	price integer
+);
+
+create table clients
+(
+	ID serial primary key,
+	surname VARCHAR(50),
+	country VARCHAR(50),
+	order_id integer references orders(id)
+);
+```
+Предоставляем права на все операции пользователю админской учётке:  
+``grant all on DATABASE test_db to "test-admin-user"; ``  
+![check test-admin-user rights](https://user-images.githubusercontent.com/68470186/143777088-36e4048f-b2ef-4da4-9396-bbee58e94011.png)  
+  
+Создаём пользователя test-simple-user:  
+`` create user 'test-simple-user' ``  
+И выдаём ему необходимые права:  
+`` GRANT select,insert,update,delete ON orders, clients TO "test-simple-user"; ``
 
 Таблица orders:
 * id (serial primary key)
@@ -25,12 +55,37 @@
 * страна проживания (string, index)
 * заказ (foreign key orders)
 
-
 Приведите:
-* итоговый список БД после выполнения пунктов выше,
+* итоговый список БД после выполнения пунктов выше
+```
+postgres=# \l
+                                     List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |       Access privileges        
+-----------+----------+----------+------------+------------+--------------------------------
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 | 
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres                   +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres                   +
+           |          |          |            |            | postgres=CTc/postgres
+ test_db   | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =Tc/postgres                  +
+           |          |          |            |            | postgres=CTc/postgres         +
+           |          |          |            |            | "test-admin-user"=CTc/postgres
+(4 rows)
+```
+
 * описание таблиц (describe)
+
+
+![table description](https://user-images.githubusercontent.com/68470186/143777971-d63d73c3-5580-4aba-9507-fbe16cab99f7.png)
+
 * SQL-запрос для выдачи списка пользователей с правами над таблицами test_db
+``` 
+SELECT table_catalog, grantee, table_schema, table_name, privilege_type
+FROM information_schema.table_privileges;
+```
 * список пользователей с правами над таблицами test_db
+![user list with rights for test_db](https://user-images.githubusercontent.com/68470186/143778309-b07f640a-0f1a-4759-97f5-3212a827f7f7.png)
+
 
 
 ## Задача 3
