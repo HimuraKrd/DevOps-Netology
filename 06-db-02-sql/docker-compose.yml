@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pa$$w0rd
+
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+      - backup_data:/backups
+
+volumes:
+  - db_data:
+  - backup_data:
+  
