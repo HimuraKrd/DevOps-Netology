@@ -145,11 +145,12 @@ mysql> SHOW PROFILES;
 +----------+------------+----------------------------------------------------------------------+
 | Query_ID | Duration   | Query                                                                |
 +----------+------------+----------------------------------------------------------------------+
+|        1 | 0.01576925 | DROP TABLE IF EXISTS t1                                                                  |
 |        1 | 0.00046725 | SELECT * from INFORMATION_SCHEMA.USER_ATTRIBUTES where USER = 'test' |
 |        2 | 0.00021350 | SELECT * FROM orders                                                 |
 |        3 | 0.00023775 | SELECT * FROM orders WHERE price > 300                               |
 +----------+------------+----------------------------------------------------------------------+
-3 rows in set, 1 warning (0.00 sec)
+4 rows in set, 1 warning (0.00 sec)
 ```
 
 * Исследуйте, какой engine используется в таблице БД test_db и приведите в ответе.
@@ -203,6 +204,80 @@ mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHE
 +------------+--------+
 1 row in set (0.00 sec)
 ```
+Ответ на вторую часть вопроса: 
+```mysql
+mysql> SHOW PROFILES;
++----------+------------+------------------------------------------------------------------------------------------+
+| Query_ID | Duration   | Query                                                                                    |
++----------+------------+------------------------------------------------------------------------------------------+
+|        2 | 0.00046725 | SELECT * from INFORMATION_SCHEMA.USER_ATTRIBUTES where USER = 'test'                     |
+|        3 | 0.00021350 | SELECT * FROM orders                                                                     |
+|        4 | 0.00023775 | SELECT * FROM orders WHERE price > 300                                                   |
+|        5 | 0.00087925 | SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology' |
+|        6 | 0.09245425 | ALTER TABLE orders ENGINE = MyIsam                                                       |
+|        7 | 0.00089075 | SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology' |
+|        8 | 0.11460800 | ALTER TABLE orders ENGINE = InnoDB                                                       |
+|        9 | 0.00083100 | SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology' |
+|       10 | 0.00005500 | SHOW PROFILIES                                                                           |
+|       11 | 0.00005850 | SHOW PROFILES QUERY 3                                                                    |
+|       12 | 0.00005950 | SHOW PROFILES FOR QUERY 3                                                                |
+|       13 | 0.00068200 | SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology' |
+|       14 | 0.00006500 | ALTER TABLE orders ENGINE = MyISAAM                                                      |
+|       15 | 0.08200825 | ALTER TABLE orders ENGINE = MyISAM                                                       |
+|       16 | 0.00033400 | SELECT * from orders o where o.price > 300                                               |
++----------+------------+------------------------------------------------------------------------------------------+
+
+15 rows in set, 1 warning (0.00 sec)
+
+mysql> SHOW PROFILE FOR QUERY 4;
+
++--------------------------------+----------+
+| Status                         | Duration |
++--------------------------------+----------+
+| starting                       | 0.000065 |
+| Executing hook on transaction  | 0.000003 |
+| starting                       | 0.000006 |
+| checking permissions           | 0.000005 |
+| Opening tables                 | 0.000033 |
+| init                           | 0.000005 |
+| System lock                    | 0.000007 |
+| optimizing                     | 0.000008 |
+| statistics                     | 0.000016 |
+| preparing                      | 0.000013 |
+| executing                      | 0.000033 |
+| end                            | 0.000003 |
+| query end                      | 0.000002 |
+| waiting for handler commit     | 0.000007 |
+| closing tables                 | 0.000005 |
+| freeing items                  | 0.000010 |
+| cleaning up                    | 0.000020 |
++--------------------------------+----------+
+17 rows in set, 1 warning (0.01 sec)
+
+mysql> SHOW PROFILE FOR QUERY 16;
++--------------------------------+----------+
+| Status                         | Duration |
++--------------------------------+----------+
+| starting                       | 0.000067 |
+| Executing hook on transaction  | 0.000003 |
+| starting                       | 0.000006 |
+| checking permissions           | 0.000005 |
+| Opening tables                 | 0.000029 |
+| init                           | 0.000004 |
+| System lock                    | 0.000008 |
+| optimizing                     | 0.000008 |
+| statistics                     | 0.000012 |
+| preparing                      | 0.000013 |
+| executing                      | 0.000063 |
+| end                            | 0.000008 |
+| query end                      | 0.000005 |
+| closing tables                 | 0.000006 |
+| freeing items                  | 0.000078 |
+| cleaning up                    | 0.000020 |
++--------------------------------+----------+
+16 rows in set, 1 warning (0.00 sec)
+
+```
 
 ## Задача 4
 Изучите файл my.cnf в директории /etc/mysql. Измените его согласно ТЗ (движок InnoDB):
@@ -212,3 +287,36 @@ mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHE
 * Буффер кеширования 30% от ОЗУ
 * Размер файла логов операций 100 Мб
 * Приведите в ответе измененный файл my.cnf.
+
+Стандартный вывод файла конфигурации:
+```mysql 
+root@56e82a3b08d5:/# cat /etc/mysql/my.cnf
+# Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+#
+# The MySQL  Server configuration file.
+#
+# For explanations see
+# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
+
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+
+# Custom config should go here
+!includedir /etc/mysql/conf.d/
+```
