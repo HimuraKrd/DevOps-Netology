@@ -320,3 +320,25 @@ secure-file-priv= NULL
 # Custom config should go here
 !includedir /etc/mysql/conf.d/
 ```
+Добавим требуемые параметры через `` echo [param] >> /etc/mysql/my.cnf ``.  
+Перезапустим контейнер и проверим, что параметры применились: 
+```mysql
+mysql> SELECT * FROM performance_schema.global_variables WHERE
+    -> Variable_name LIKE 'innodb_buffer_pool_size' OR
+    -> Variable_name LIKE 'innodb_log_file_size' OR
+    -> Variable_name LIKE 'innodb_log_buffer_size' OR
+    -> Variable_name LIKE 'innodb_file_per_table' OR
+    -> Variable_name LIKE 'innodb_io_capacity' OR
+    -> Variable_name LIKE 'innodb_flush_log_at_trx_commit';
++--------------------------------+----------------+
+| VARIABLE_NAME                  | VARIABLE_VALUE |
++--------------------------------+----------------+
+| innodb_buffer_pool_size        | 671088640      |
+| innodb_file_per_table          | ON             |
+| innodb_flush_log_at_trx_commit | 2              |
+| innodb_io_capacity             | 200            |
+| innodb_log_buffer_size         | 1048576        |
+| innodb_log_file_size           | 104857600      |
++--------------------------------+----------------+
+6 rows in set (0.01 sec)
+```
