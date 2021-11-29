@@ -104,18 +104,105 @@ mysql> SELECT * FROM orders;
 * Фамилия "Pretty"
 * Имя "James"
 
+Создадим пользователя, используя команду:
+```mysql 
+CREATE USER 
+'test'@'localhost' IDENTIFIED WITH mysql_native_password by 'test-pass'
+PASSWORD EXPIRE INTERVAL 180 DAY
+FAILED_LOGIN_ATTEMPTS 3
+PASSWORD HISTORY 100
+ATTRIBUTE '{"fname": "James","lname": "Pretty"}'; 
+```
 
 Предоставьте привелегии пользователю test на операции SELECT базы test_db.  
-Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получите данные по пользователю test и приведите в ответе к задаче.
+Выполним требуемую задачу:  
+```mysql 
+GRANT SELECT ON netology.* to 'test'@'localhost';
+```
+Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получите данные по пользователю test и приведите в ответе к задаче.  
+```mysql
+mysql> SELECT * from INFORMATION_SCHEMA.USER_ATTRIBUTES where USER = 'test';
+
++------+-----------+---------------------------------------+
+| USER | HOST      | ATTRIBUTE                             |
++------+-----------+---------------------------------------+
+| test | localhost | {"fname": "James", "lname": "Pretty"} |
++------+-----------+---------------------------------------+
+1 row in set (0.00 sec)
+```
 
 ## Задача 3
 * Установите профилирование SET profiling = 1. Изучите вывод профилирования команд SHOW PROFILES;.
+
+```mysql 
+mysql> SET profiling = 1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+mysql> DROP TABLE IF EXISTS t1;
+Query OK, 0 rows affected, 1 warning (0.01 sec)
+
+mysql> SHOW PROFILES;
+
++----------+------------+----------------------------------------------------------------------+
+| Query_ID | Duration   | Query                                                                |
++----------+------------+----------------------------------------------------------------------+
+|        1 | 0.00046725 | SELECT * from INFORMATION_SCHEMA.USER_ATTRIBUTES where USER = 'test' |
+|        2 | 0.00021350 | SELECT * FROM orders                                                 |
+|        3 | 0.00023775 | SELECT * FROM orders WHERE price > 300                               |
++----------+------------+----------------------------------------------------------------------+
+3 rows in set, 1 warning (0.00 sec)
+```
+
 * Исследуйте, какой engine используется в таблице БД test_db и приведите в ответе.
+
+```mysql
+mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology';
++------------+--------+
+| TABLE_NAME | ENGINE |
++------------+--------+
+| orders     | InnoDB |
++------------+--------+
+1 row in set (0.00 sec)
+```
 
 Измените engine и приведите время выполнения и запрос на изменения из профайлера в ответе на:
 * MyISAM
 * InnoDB
 
+```mysql 
+mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology';
+
++------------+--------+
+| TABLE_NAME | ENGINE |
++------------+--------+
+| orders     | InnoDB |
++------------+--------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = MyIsam;
+Query OK, 5 rows affected (0.09 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology';
++------------+--------+
+| TABLE_NAME | ENGINE |
++------------+--------+
+| orders     | MyISAM |
++------------+--------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 5 rows affected (0.11 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'netology';
++------------+--------+
+| TABLE_NAME | ENGINE |
++------------+--------+
+| orders     | InnoDB |
++------------+--------+
+1 row in set (0.00 sec)
+```
 
 ## Задача 4
 Изучите файл my.cnf в директории /etc/mysql. Измените его согласно ТЗ (движок InnoDB):
