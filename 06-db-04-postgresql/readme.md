@@ -102,6 +102,36 @@ INFO:  "pg_subscription": scanned 0 of 0 pages, containing 0 live rows and 0 dea
 * Предложите SQL-транзакцию для проведения данной операции.
 * Можно ли было изначально исключить "ручное" разбиение при проектировании таблицы orders?
 
+Создадим новую таблицу, подготовив её к разделению по графе ``price``:
+```postgresql 
+create table orders_new (
+ id serial,
+ title varchar (40),
+ price integer
+) partition by range (price);
+```
+Создадим две дочерние таблицы, завязанные на основной:
+```postgresql
+create table orders_1 
+partition of orders_new 
+for values from (0) to (500);
+
+create table orders_2 
+partition of orders_new 
+for values from (500) to (maxvalue);
+```
+Добавим данные из основной таблицы в новую, которую мы подготовили для разделения: `` insert into orders_new (title, price) select o.title, o.price from orders o;``. Посмотрим наполнение созданных таблиц:  
+![orders_1](https://user-images.githubusercontent.com/68470186/144302275-2a1eb89d-3a39-4849-bc6e-76025ac0efd7.png)  
+![orders_2](https://user-images.githubusercontent.com/68470186/144302277-fb927aca-e34b-4e99-b309-96ff806b65e3.png)  
+Я также поигрался с вставкой данных в таблицу (видно по таблице orders_1) и сбил индексы. Для восстановления последовательности использовал сочетание команд:
+```postgresql
+ALTER SEQUENCE orders_new_id_seq RESTART WITH 1; 
+update orders_new set id = default;
+```
+Насколько я понял, автоматическое шардирование стандартными средставами не представляется возможным.
+
 ## Задача 4
 * Используя утилиту pg_dump создайте бекап БД test_database.
-* \dКак бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
+* Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
+
+Если сделать бэкап в формате .sql - его можно открыть любым текстовым редактором и отредактировать любые поля.
