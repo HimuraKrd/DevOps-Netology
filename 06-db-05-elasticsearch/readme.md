@@ -11,6 +11,7 @@
 * соберите docker-образ и сделайте push в ваш docker.io репозиторий
 * запустите контейнер из получившегося образа и выполните запрос пути / c хост-машины
 
+``sudo docker run --rm -d -p 9200:9200 -v "$(pwd)"/data:/var/lib/elasticsearch -v "$(pwd)"/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml --name elastic mbagirov/elastic:7.15.2``
 
 Требования к elasticsearch.yml:
 * данные path должны сохраняться в /var/lib
@@ -19,7 +20,7 @@
 
 В ответе приведите:
 * текст Dockerfile манифеста
-* ссылку на образ в репозитории dockerhub
+* [ссылку](https://hub.docker.com/r/mbagirov/elastic) на образ в репозитории dockerhub
 * ответ elasticsearch на запрос пути / в json виде
 
 Подсказки:
