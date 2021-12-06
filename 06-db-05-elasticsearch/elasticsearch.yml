@@ -3,3 +3,4 @@ node.name: "netology_test"
 network.host: 0.0.0.0
 cluster.initial_master_nodes: netology_test
 path.data: /var/lib/elasticsearch
+path.repo: ["/elasticsearch-7.15.2/snapshots"] #added in the backup section
