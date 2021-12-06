@@ -1,7 +1,5 @@
 FROM centos:7
 
-WORKDIR /
-
 # устанавливаем ПО, необходимое для установки
 RUN yum -y install wget && \
     yum -y install perl-Digest-SHA
@@ -10,7 +8,7 @@ RUN yum -y install wget && \
 RUN groupadd -g 1000 elasticsearch && \
     useradd elasticsearch -u 1000 -g 1000
 
-# загружаем и устанавливаем ES 
+# загружаем и устанавливаем elastic 
 ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-linux-x86_64.tar.gz .
 ADD https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-linux-x86_64.tar.gz.sha512 .
 
@@ -26,10 +24,12 @@ COPY elasticsearch.yml elasticsearch-7.15.2/config/
 
 # назначаем права
 RUN chown -R elasticsearch:elasticsearch /elasticsearch-7.15.2/ && \
-    chown -R elasticsearch:elasticsearch /var/lib/elasticsearch
+    chown -R elasticsearch:elasticsearch /var/lib/elasticsearch && \
+    chown -R 1000:1000 /var/lib/elasticsearch
 
 USER elasticsearch
 
+#работаем с окружением и портами
 ENV PATH=$PATH:/elasticsearch-7.15.2/bin
 
 EXPOSE 9200 9300
