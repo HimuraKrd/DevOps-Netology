@@ -1,5 +1,7 @@
 FROM centos:7
 
+WORKDIR /
+
 # устанавливаем ПО, необходимое для установки
 RUN yum -y install wget && \
     yum -y install perl-Digest-SHA
