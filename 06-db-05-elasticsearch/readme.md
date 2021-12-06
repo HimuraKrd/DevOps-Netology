@@ -93,7 +93,8 @@ yellow open   ind-2 8B7Mdwt_SMiK_Ei6v8zMSw   2   1          0            0      
 green  open   ind-3 -F3lZyGBTEOOsxnHvqdxUQ   1   0          0            0       208b           208b
 yellow open   ind-4 ex0BWiITTMeB2aWpjZAexA   4   2          0            0       832b           832b
 ```
-Cостояние ``green`` только у первого индекса (и 3, введённого по ошибке). У ind-2 и ind-3 статус yellow, т.к. в созданном ранее кластере всего одна нода с одним шардом, реплики отсутствуют. Для изменения состояния "здоровья" других индексов надо увеличивать количество нод.
+Cостояние ``green`` только у первого индекса (и 3, введённого по ошибке). У ind-2 и ind-3 статус yellow, т.к. в созданном ранее кластере всего одна нода с одним шардом, реплики отсутствуют. Для изменения состояния "здоровья" других индексов надо увеличивать количество нод.  
+Удаляются все индексы при помощи ``curl -XDELETE localhost:9200/_all``.
 
 
 ## Задача 3
@@ -104,13 +105,129 @@ Cостояние ``green`` только у первого индекса (и 3,
 
 Задачи:
 * Создайте директорию {путь до корневой директории с elasticsearch в образе}/snapshots.
+
+``path.repo: /elasticsearch-7.15.2/snapshots`` после чего перезагрузим контейнер, чтоб он взял настройки.
 * Используя API зарегистрируйте данную директорию как snapshot repository c именем netology_backup.
 * Приведите в ответе запрос API и результат вызова API для создания репозитория.
+
+
+```shell
+curl -X PUT "localhost:9200/_snapshot/snapshot_repository?pretty" -H 'Content-Type: application/json' -d'
+{
+  "type": "fs",
+  "settings": {
+    "location": "/elasticsearch-7.15.2/snapshots/netology_backup/",
+    "compress": true
+  }
+}
+'
+```
 * Создайте индекс test с 0 реплик и 1 шардом и приведите в ответе список индексов.
+
+```shell
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/test?pretty -d '{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  }
+}'
+
+[Himura@fedora 06-db-05-elasticsearch]$ curl -X GET "localhost:9200/_cat/indices?v"
+health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .geoip_databases xjNnxnDdRKytNHdiBYm7qQ   1   0         43            0     40.9mb         40.9mb
+green  open   test             WTCvUNTGS8mmLNy0hocJUQ   1   0          0            0       208b           208b
+```
+
 * Создайте snapshot состояния кластера elasticsearch.
+
+``` shell 
+[Himura@fedora 06-db-05-elasticsearch]$ curl -X PUT "localhost:9200/_snapshot/snapshot_repository/snapshot_1?wait_for_completion=true&pretty"
+{
+  "snapshot" : {
+    "snapshot" : "snapshot_1",
+    "uuid" : "VecvAFdLQsaBBi3wCnoujA",
+    "repository" : "snapshot_repository",
+    "version_id" : 7150299,
+    "version" : "7.15.2",
+    "indices" : [
+      "test",
+      ".geoip_databases"
+    ],
+    "data_streams" : [ ],
+    "include_global_state" : true,
+    "state" : "SUCCESS",
+    "start_time" : "2021-12-06T21:19:45.364Z",
+    "start_time_in_millis" : 1638825585364,
+    "end_time" : "2021-12-06T21:19:46.765Z",
+    "end_time_in_millis" : 1638825586765,
+    "duration_in_millis" : 1401,
+    "failures" : [ ],
+    "shards" : {
+      "total" : 2,
+      "failed" : 0,
+      "successful" : 2
+    },
+    "feature_states" : [
+      {
+        "feature_name" : "geoip",
+        "indices" : [
+          ".geoip_databases"
+        ]
+      }
+    ]
+```
 * Приведите в ответе список файлов в директории со snapshotами.
+
+Зайдём на контейнер, используя ``sudo docker exec -it elastic bash`` и посмотрим файлы в подключённом репозитории:
+```shell
+[elasticsearch@aa73aef2ae1e /]$ ll /elasticsearch-7.15.2/snapshots/netology_backup/
+total 24
+-rw-r--r--. 1 elasticsearch elasticsearch  828 Dec  6 21:19 index-0
+-rw-r--r--. 1 elasticsearch elasticsearch    8 Dec  6 21:19 index.latest
+drwxr-xr-x. 1 elasticsearch elasticsearch   88 Dec  6 21:19 indices
+-rw-r--r--. 1 elasticsearch elasticsearch 9387 Dec  6 21:19 meta-VecvAFdLQsaBBi3wCnoujA.dat
+-rw-r--r--. 1 elasticsearch elasticsearch  351 Dec  6 21:19 snap-VecvAFdLQsaBBi3wCnoujA.dat
+```
+
 * Удалите индекс test и создайте индекс test-2. Приведите в ответе список индексов.
+
+```shell
+[elasticsearch@aa73aef2ae1e /]$ curl -X DELETE "localhost:9200/test?pretty"
+{
+  "acknowledged" : true
+}
+[elasticsearch@aa73aef2ae1e /]$ 
+
+#создадим второй индекс
+curl -XPUT -H "Content-Type: application/json" http://localhost:9200/test-2?pretty -d '{
+  "settings": {
+    "index": {
+      "number_of_shards": 1,
+      "number_of_replicas": 0
+    }
+  }
+}'
+
+[Himura@fedora 06-db-05-elasticsearch]$ curl -X GET "localhost:9200/_cat/indices?v"
+health status index            uuid                    pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2            7sDS_7-BTJqYxfK7BDNwBg   1   0          0            0       208b           208b
+green  open   .geoip_databases  xjNnxnDdRKytNHdiBYm7qQ   1   0         43            0     40.9mb         40.9mb
+```
 * Восстановите состояние кластера elasticsearch из snapshot, созданного ранее.
 * Приведите в ответе запрос к API восстановления и итоговый список индексов.
+
+```shell
+
+curl -H 'Content-Type: application/json' -X POST "localhost:9200/_snapshot/snapshot_repository/snapshot_1/_restore" -d '{"include_global_state": true}'
+
+[Himura@fedora 06-db-05-elasticsearch]$ curl -X GET "localhost:9200/_cat/indices?v"
+health status index            uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   .geoip_databases s_iuiPjBRdqCOdYlrboNhQ   1   0         43            0     35.1mb         35.1mb
+green  open   test-2           7sDS_7-BTJqYxfK7BDNwBg   1   0          0            0       208b           208b
+green  open   test-1           rzVwDfy5QCOfsZuW394j7A   1   0          0            0       208b           208b
+
+```
 
 Подсказки: возможно вам понадобится доработать elasticsearch.yml в части директивы path.repo и перезапустить elasticsearch
