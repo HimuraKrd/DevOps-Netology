@@ -11,7 +11,15 @@
 * соберите docker-образ и сделайте push в ваш docker.io репозиторий
 * запустите контейнер из получившегося образа и выполните запрос пути / c хост-машины
 
-``sudo docker run --rm -d -p 9200:9200 -v "$(pwd)"/data:/var/lib/elasticsearch -v "$(pwd)"/elasticsearch.yml:/etc/elasticsearch/elasticsearch.yml --name elastic mbagirov/elastic:7.15.2``
+``sudo docker run -d -p 9200:9200 -p 9300:9300 -v "$(pwd)":/var/lib/elasticsearch -v "$(pwd)"/elasticsearch.yml:/var/lib/elasticsearch.yml --name elastic mbagirov/elastic:7.15.2
+``
+
+Долго пытался поймать ошибку, ибо логи были слишком короткие. Через ``sudo watch docker logs container_name`` поймал следующую ошибку:
+```shell
+ERROR: [1] bootstrap checks failed. You must address the points described in the following [1] lines before starting Elasticsearch.
+bootstrap check failure [1] of [1]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]
+```
+После увеличения до рекомендованного значения при помощи команды ``sudo sysctl -w vm.max_map_count=262144``, проблема ушла. 
 
 Требования к elasticsearch.yml:
 * данные path должны сохраняться в /var/lib
@@ -35,9 +43,11 @@
 ## Задача 2
 В этом задании вы научитесь:
 
-создавать и удалять индексы
-изучать состояние кластера
-обосновывать причину деградации доступности данных
+* создавать и удалять индексы
+* изучать состояние кластера
+* обосновывать причину деградации доступности данных
+
+
 Ознакомтесь с документацией и добавьте в elasticsearch 3 индекса, в соответствии со таблицей:
 
 | Имя           | Количество реплик  | Количество шард |
