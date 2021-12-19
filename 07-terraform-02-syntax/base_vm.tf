@@ -15,7 +15,7 @@ resources {
       image_id    = "packer_id_at_cloud"
       name        = "root-node01"
       type        = "network-nvme"
-      size        = "20"
+      size        = "10"
     }
   }
 
