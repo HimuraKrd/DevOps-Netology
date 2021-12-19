@@ -7,6 +7,7 @@
 ```shell
 [Himura@fedora yandex]$ terraform plan
 Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+
   + create
 
 Terraform will perform the following actions:
@@ -22,17 +23,16 @@ Terraform will perform the following actions:
       + metadata                  = {
 
           + "ssh-keys" = <<-EOT
-              some ssh keys is here
+              some_ssh_is_here
             EOT
         }
-
+        
       + name                      = "node01"
       + network_acceleration_type = "standard"
       + platform_id               = "standard-v1"
       + service_account_id        = (known after apply)
       + status                    = (known after apply)
       + zone                      = "ru-central1-a"
-
 
       + boot_disk {
           + auto_delete = true
@@ -80,7 +80,6 @@ Terraform will perform the following actions:
     }
 
   # yandex_vpc_network.default will be created
-
   + resource "yandex_vpc_network" "default" {
       + created_at                = (known after apply)
       + default_security_group_id = (known after apply)
@@ -92,7 +91,6 @@ Terraform will perform the following actions:
     }
 
   # yandex_vpc_subnet.default will be created
-
   + resource "yandex_vpc_subnet" "default" {
       + created_at     = (known after apply)
       + folder_id      = (known after apply)
@@ -108,5 +106,4 @@ Terraform will perform the following actions:
     }
 
 Plan: 3 to add, 0 to change, 0 to destroy.
-
 ```
