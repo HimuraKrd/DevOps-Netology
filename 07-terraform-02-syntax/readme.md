@@ -70,7 +70,7 @@ Terraform will perform the following actions:
 
       + resources {
           + core_fraction = 20
-          + cores         = 1
+          + cores         = 2
           + memory        = 2
         }
 
@@ -107,3 +107,5 @@ Terraform will perform the following actions:
 
 Plan: 3 to add, 0 to change, 0 to destroy.
 ```
+В результате выполнения ``terraform apply`` создаётся следующая виртуальная машина:  
+![image](https://user-images.githubusercontent.com/68470186/146671454-18f3bf69-e5bc-4fb9-a4b2-eff7ba1ed3ba.png)
