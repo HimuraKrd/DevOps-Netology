@@ -4,15 +4,14 @@
 ## Задача 2. Инициализируем проект и создаем воркспейсы.
 
 В виде результата работы пришлите:
+* Вывод команды terraform workspace list.
+* Вывод команды terraform plan для воркспейса prod.  
 
-Вывод команды terraform workspace list.
-Вывод команды terraform plan для воркспейса prod.  
-  
 В связи с работой с YC немного костыльно пришлось решать задачу..  
-* Создадим бакет для хранения состояния s3 через web gui от YC:
+Создадим бакет для хранения состояния s3 через web gui от YC:
 ![image](https://user-images.githubusercontent.com/68470186/147870868-2ae0d625-298e-4a75-ab5b-08c9ca69bec7.png)
 
-* Создадим файл main.tf и опишем в нём подключение к яндексу и его s3:
+Создадим файл main.tf и опишем в нём подключение к яндексу и его s3:
 
 
 ```
@@ -324,5 +323,16 @@ commands will detect it and remind you to do so if necessary.
   lab2
 ```
 Таким образом, мы можем хранить наши воркспейсы в облаке вместе с состоянием.
+Удалим ресурсы, чтобы не тратить деньги при помощи ```terraform destroy --auto-approve```:
+```
+Plan: 0 to add, 0 to change, 3 to destroy.
+yandex_compute_instance.node01: Destroying... [id=fhm9vojppu3p1km37jtt]
+yandex_compute_instance.node01: Still destroying... [id=fhm9vojppu3p1km37jtt, 10s elapsed]
+yandex_compute_instance.node01: Destruction complete after 11s
+yandex_vpc_subnet.default: Destroying... [id=e9b9m6tttabfo02kf51h]
+yandex_vpc_subnet.default: Destruction complete after 3s
+yandex_vpc_network.default: Destroying... [id=enprv1mla1f10vn3276v]
+yandex_vpc_network.default: Destruction complete after 0s
 
-
+Destroy complete! Resources: 3 destroyed.
+```
