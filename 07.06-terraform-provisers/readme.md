@@ -15,6 +15,7 @@ DataSource: [ссылка](https://github.com/hashicorp/terraform-provider-aws/b
 
 Для создания очереди сообщений SQS используется ресурс ``aws_sqs_queue`` у которого есть параметр ``name``.
 * С каким другим параметром конфликтует name? Приложите строчку кода, в которой это указано.
+
 [name_prefix](https://github.com/hashicorp/terraform-provider-aws/blob/5770d3e9fbec1383b4f0bed6b5bf2dd4830003e2/aws/resource_aws_sqs_queue.go#L55)
 
 Ответы на следующие вопросы нашёл в файле [Validators.go](https://github.com/hashicorp/terraform-provider-aws/blob/5770d3e9fbec1383b4f0bed6b5bf2dd4830003e2/aws/validators.go)
