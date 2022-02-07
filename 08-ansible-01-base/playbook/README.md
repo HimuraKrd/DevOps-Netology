@@ -34,5 +34,5 @@ ansible-playbook -i path_to_inventory site.yml --ask-vault-password
 
 9. Какой параметр из модуля подключения `ssh` необходим для того, чтобы определить пользователя, под которым необходимо совершать подключение?
 
-(Ссылка на GitHub репо)[https://github.com/ansible/ansible/blob/c600ab81ee/lib/ansible/playbook/play_context.py#L46-L55]  
+[Ссылка на GitHub репо](https://github.com/ansible/ansible/blob/c600ab81ee/lib/ansible/playbook/play_context.py#L46-L55)  
 ``remote_user      = ('ansible_ssh_user', 'ansible_user')``
