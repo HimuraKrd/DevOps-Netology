@@ -1,0 +1,138 @@
+---
+- name: Install Elasticsearch
+  hosts: elasticsearch
+  handlers:
+    - name: restart Elasticsearch
+      become: true
+      service:
+        name: elasticsearch
+        state: restarted
+  tasks:
+    - name: "Download Elasticsearch's rpm"
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elk_version }}-x86_64.rpm"
+        dest: "/tmp/elasticsearch-{{ elk_version }}-x86_64.rpm"
+      register: download_elastic
+      until: download_elastic is succeeded
+
+    - name: Install Elasticsearch
+      become: true
+      yum:
+        name: "/tmp/elasticsearch-{{ elk_version }}-x86_64.rpm"
+        state: present
+
+    - name: Configure Elasticsearch
+      become: true
+      template:
+        src: elasticsearch.yml.j2
+        dest: /etc/elasticsearch/elasticsearch.yml
+        mode: u=rw,g=r,o=r
+      notify: restart Elasticsearch
+
+- name: Install Kibana
+  hosts: kibana
+  handlers:
+    - name: restart_kibana
+      become: true
+      service:
+        name: kibana
+        state: restarted
+  tasks:
+    - name: "Download Kibana's rpm"
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/kibana/kibana-{{ elk_version }}-x86_64.rpm"
+        dest: "/tmp/kibana-{{ elk_version }}-x86_64.rpm"
+      register: download_kibana
+      until: download_kibana is succeeded
+
+    - name: Install Kibana
+      become: true
+      yum:
+        name: "/tmp/kibana-{{ elk_version }}-x86_64.rpm"
+        state: present
+
+    - name: Configure Kibana
+      become: true
+      template:
+        src: kibana.yml.j2
+        dest: /etc/kibana/kibana.yml
+        mode: u=rw,g=r,o=r
+      notify: restart_kibana
+
+# - name: Install Logstash
+#   hosts: logstash 
+#   handlers:
+#     - name: restart_logstash
+#       become: true
+#       service:
+#         name: logstash
+#         state: restarted
+#   tasks:
+#     - name: "Download Logstash's rpm"
+#       get_url:
+#         url: "https://artifacts.elastic.co/downloads/logstash/logstash-{{ elk_version }}-x86_64.rpm"
+#         dest: "/tmp/logstash-{{ elk_version }}-x86_64.rpm"
+#       register: download_logstash
+#       until: download_logstash is succeeded
+
+#     - name: Install Logstash
+#       become: true
+#       yum:
+#         name: "/tmp/logstash-{{ elk_version }}-x86_64.rpm"
+#         state: present
+
+#     - name: Configure Logstash
+#       become: true
+#       template:
+#         src: logstash.yml.j2
+#         dest: /etc/logstash/logstash.yml
+#       notify: restart_logstash
+
+- name: install Filebeat
+  hosts: filebeat
+  handlers:
+    - name: restart_filebeat
+      become: true
+      systemd:
+        name: filebeat
+        state: restarted
+        enabled: true
+  tasks:
+    - name: "Download Filebeat's rpm"
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-{{ elk_version }}-x86_64.rpm"
+        dest: "/tmp/filebeat-{{ elk_version }}-x86_64.rpm"
+      register: download_filebeat
+      until: download_filebeat is succeeded
+
+    - name: Install filebeat
+      become: true
+      yum:
+        name: "/tmp/filebeat-{{ elk_version }}-x86_64.rpm"
+        state: present
+      notify: restart_filebeat
+
+    - name: configure filebeat
+      become: true
+      template:
+        src: filebeat.yml.j2
+        dest: /etc/filebeat/filebeat.yml
+        mode: u=rw,g=r,o=r
+      notify: restart_filebeat
+
+    - name: set filebeat systemwork
+      become: true
+      command:
+        cmd: filebeat modules enable system
+        chdir: /usr/share/filebeat/bin
+      register: filebeat_modules
+      changed_when: filebeat_modules.stdout != 'Module system is alreade enabled'
+
+    - name: Load Kibana Dashboard
+      become: true
+      command:
+        cmd: filebeat setup
+        chdir: /usr/share/filebeat/bin
+      register: filebeat_setup
+      changed_when: filebeat_setup
+      until: filebeat_setup is succeeded
