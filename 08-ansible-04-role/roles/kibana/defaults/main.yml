@@ -1,0 +1,3 @@
+---
+elk_version: "7.14.0"
+elastic_install_type: remote

@@ -1,0 +1,7 @@
+---
+- name: Install Elasticsearch
+  become: true
+  apt:
+    deb: "/tmp/filebeat-{{ elk_version }}-amd64.deb"
+    state: present
+  notify: restart_filebeat
