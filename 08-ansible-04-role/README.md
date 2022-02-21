@@ -59,6 +59,45 @@ kibana                     : ok=8    changed=0    unreachable=0    failed=0    s
 Для запуска плейбука необходимо выполнить команду ``ansible-playbook -i inventory/lab site.yaml``.  
 Внутри папки ``roles`` есть 3 каталога с всеми директорами, созданными при помощи команды ``ansible-galaxy init [role_name]``. Внутри каждой расположены соответствующие компоненты (таски, хэндлеры, темплейты и т.д.).  
 В результате прогона плейбука поднимается стек из ElasticSearch, Kibana и Filebeat. Сервисы работают:  
-![image](https://user-images.githubusercontent.com/68470186/154984021-224588da-2114-457b-b89c-83a7e80502be.png)
+![image](https://user-images.githubusercontent.com/68470186/154984021-224588da-2114-457b-b89c-83a7e80502be.png)  
+  
+Пример "разбивания" плейбука на роли:
+```shell
+# файл configure.yml для filebeat из роли filebeat.
+---
+- name: configure filebeat
+  become: true
+  template:
+    src: filebeat.yml.j2
+    mode: 0644
+    dest: /etc/filebeat/filebeat.yml
+  notify: restart_filebeat
 
+- name: set filebeat systemwork
+  become: true
+  command:
+    cmd: filebeat modules enable system
+    chdir: /usr/share/filebeat/bin
+  register: filebeat_modules
+  changed_when: filebeat_modules.stdout != 'Module system is alreade enabled'
+    
+- name: enable filebeat service
+  become: true
+  service:
+    name: filebeat
+    state: started
+    enabled: yes
+
+- name: Load Kibana Dashboard
+  become: true
+  command:
+    cmd: filebeat setup
+    chdir: /usr/share/filebeat/bin
+  register: filebeat_setup
+  changed_when: filebeat_setup
+  until: filebeat_setup is succeeded
+```
+Данный плейбук будет выполняться на следующих дистрибьютивах:  
+```yaml
+supported_systems: ['CentOS', 'Red Hat Enterprise Linux', 'Ubuntu', 'Debian']```
 ---
