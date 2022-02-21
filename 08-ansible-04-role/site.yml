@@ -1,0 +1,20 @@
+---
+- name: install elasticsearch and logstash
+  hosts: 
+    - elastic
+      #    - logstash
+  roles:
+    - elastic
+      #    - logstash
+
+- name: install kibana
+  hosts: 
+    - kibana
+  roles: 
+    - kibana
+
+- name: install filebeat
+  hosts: 
+    - filebeat
+  roles:
+    - filebeat

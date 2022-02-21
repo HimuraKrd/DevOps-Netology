@@ -1,0 +1,4 @@
+*/.terraform*
+*.rpm
+*.deb
+*terraform/*

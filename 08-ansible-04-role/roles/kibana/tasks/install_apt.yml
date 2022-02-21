@@ -2,6 +2,6 @@
 - name: Install Kibana
   become: true
   apt:
-    deb: "/tmp/elasticsearch-{{ elk_version }}-amd64.deb"
+    deb: "/tmp/kibana-{{ elk_version }}-amd64.deb"
     state: present
   notify: restart kibana
