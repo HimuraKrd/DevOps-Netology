@@ -1,0 +1,15 @@
+---
+- name: "Download Filebeat's deb"
+  get_url:
+    url: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-{{ elk_version }}-amd64.deb"
+    dest: "files/filebeat-{{ elk_version }}-amd64.deb"
+    validate_certs: false
+  register: download_filebeat
+  delegate_to: localhost
+  until: download_filebeat is succeeded
+
+- name: Copy Filebeat to managed node
+  copy:
+    src: "files/filebeat-{{ elk_version }}-amd64.deb"
+    mode: 0755
+    dest: "/tmp/filebeat-{{ elk_version }}-amd64.deb"
