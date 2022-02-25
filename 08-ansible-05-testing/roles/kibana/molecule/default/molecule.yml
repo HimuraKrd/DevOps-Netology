@@ -1,0 +1,49 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  # kibana нужен эластик в качестве базы данных
+  - name: elastic
+    groups: 
+      - elasticsearch
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: True
+    command: "/usr/sbin/init"
+    privileged: True
+    volume:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  
+  # платформы для тестирования роли
+  - name: centos7
+    groups: 
+      - kibana
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: True
+    command: "/usr/sbin/init"
+    capabilities:
+      - SYS_ADMIN
+    privileged: True
+    volume:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  
+  - name: centos8
+    groups: 
+      - kibana
+    image: docker.io/pycontribs/centos:8
+    pre_build_image: True
+    command: "/usr/sbin/init"
+    privileged: True
+    volume:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro" 
+  
+  - name: ubuntu
+    groups: 
+      - kibana
+    image: docker.io/pycontribs/ubuntu:latest
+    pre_build_image: True
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
