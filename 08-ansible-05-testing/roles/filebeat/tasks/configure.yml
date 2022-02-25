@@ -5,7 +5,7 @@
     src: filebeat.yml.j2
     mode: 0644
     dest: /etc/filebeat/filebeat.yml
-  notify: restart_filebeat
+  # notify: restart_filebeat
 
 - name: set filebeat systemwork
   become: true
@@ -15,18 +15,18 @@
   register: filebeat_modules
   changed_when: filebeat_modules.stdout != 'Module system is alreade enabled'
     
-- name: enable filebeat service
-  become: true
-  service:
-    name: filebeat
-    state: started
-    enabled: yes
+# - name: enable filebeat service
+#   become: true
+#   service:
+#     name: filebeat
+#     state: started
+#     enabled: yes
 
-- name: Load Kibana Dashboard
-  become: true
-  command:
-    cmd: filebeat setup
-    chdir: /usr/share/filebeat/bin
-  register: filebeat_setup
-  changed_when: filebeat_setup
-  until: filebeat_setup is succeeded
+# - name: Load Kibana Dashboard
+#   become: true
+#   command:
+#     cmd: filebeat setup
+#     chdir: /usr/share/filebeat/bin
+#   register: filebeat_setup
+#   changed_when: filebeat_setup
+#   until: filebeat_setup is succeeded

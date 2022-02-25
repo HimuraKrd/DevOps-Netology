@@ -1,0 +1,14 @@
+- name: elk-elasticsearch
+  hosts: elastic
+  roles:
+    - elastic
+
+- name: elk-kibana
+  hosts: kibana
+  roles:
+    - kibana
+
+- name: filebeat
+  hosts: filebeat
+  roles:
+    - filebeat

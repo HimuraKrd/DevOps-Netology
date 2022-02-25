@@ -4,4 +4,6 @@
   yum:
     name: "/tmp/filebeat-{{ elk_version }}-x86_64.rpm"
     state: present
+    disablerepo: "appstream,baseos,epel,epel-modular,extras"
+    disable_gpg_check: yes
   # notify: restart_filebeat

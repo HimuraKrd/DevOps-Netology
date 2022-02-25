@@ -609,4 +609,28 @@ ok: [ubuntu]
 ok: [centos7]
 ok: [centos8]
 ```
+Проделал те же самые проверки для logstash:
+```yaml
+TASK [filebeat : set filebeat systemwork] **************************************
+changed: [centos8]
+changed: [ubuntu]
+changed: [centos7]
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=9    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+centos8                    : ok=8    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+elastic                    : ok=8    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+kibana                     : ok=8    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+ubuntu                     : ok=8    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+
+CRITICAL Idempotence test failed because of the following tasks:
+*  => filebeat : set filebeat systemwork
+*  => filebeat : set filebeat systemwork
+*  => filebeat : set filebeat systemwork
+WARNING  An error occurred during the test sequence action: 'idempotence'. Cleaning up.
+INFO     Running default > cleanup
+WARNING  Skipping, cleanup playbook not configured.
+INFO     Running default > destroy
+[WARNING]: Found both group and host with same name: kibana
+```
 ---

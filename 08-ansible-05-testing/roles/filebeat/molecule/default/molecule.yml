@@ -1,0 +1,62 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  # filebeat нужен эластик в качестве базы данных и кибана для подключения дашбордов
+  - name: elastic
+    groups: 
+      - elasticsearch
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+    command: "/usr/sbin/init"
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  
+  - name: kibana
+    groups: 
+      - kibana
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+    command: "/usr/sbin/init"
+    capabilities:
+      - SYS_ADMIN
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  
+  # платформы для тестирования роли
+  - name: centos7
+    groups: 
+      - filebeat
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+    # command: "/usr/sbin/init"
+    command: ${MOLECULE_DOCKER_COMMAND:-"/usr/sbin/init"}
+    capabilities:
+      - SYS_ADMIN
+    privileged: true
+    volumess:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  
+  - name: centos8
+    groups: 
+      - filebeat
+    image: docker.io/pycontribs/centos:8
+    pre_build_image: true
+    command: "/usr/sbin/init"
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro" 
+  
+  - name: ubuntu
+    groups: 
+      - filebeat
+    image: docker.io/pycontribs/ubuntu:latest
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
