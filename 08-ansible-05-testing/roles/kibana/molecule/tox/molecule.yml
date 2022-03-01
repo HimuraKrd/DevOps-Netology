@@ -1,0 +1,56 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  # kibana нужен эластик в качестве базы данных
+  - name: elastic
+    hostname: elastic
+    groups: 
+      - elasticsearch
+    image: mpaivabarbosa/molecule-systemd-centos:7
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    override_command: false
+  
+  # платформы для тестирования роли
+  - name: centos-7
+    hostname: centos
+    image: mpaivabarbosa/molecule-systemd-centos:7
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    override_command: false
+  
+  - name: centos8
+    hostname: centos8
+    groups: 
+      - kibana
+    image: mpaivabarbosa/molecule-systemd-centos:8
+    pre_build_image: true
+    command: "/usr/sbin/init"
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro" 
+    override_command: false
+  
+  - name: ubuntu
+    hostname: ubuntu
+    groups: 
+      - kibana
+    image: mpaivabarbosa/molecule-systemd-ubuntu:latest
+    pre_build_image: true
+    priviliged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro" 
+    override_command: false
+
+
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
