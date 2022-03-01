@@ -9,7 +9,7 @@
   until: download_kibana is succeeded
   when: elastic_install_type == 'remote'
 
-- name: Copy Kibana to managed node
+- name: Copy Kibana to managed nodes apt
   copy:
     src: "files/kibana-{{ elk_version }}-amd64.deb"
     mode: 0755

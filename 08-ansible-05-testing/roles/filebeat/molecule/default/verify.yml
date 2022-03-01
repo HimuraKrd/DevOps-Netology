@@ -2,7 +2,7 @@
 # This is an example playbook to execute Ansible tests.
 
 - name: Verify
-  hosts: all
+  hosts: filebeat
   gather_facts: false
   tasks:
   - name: Check if log file is created

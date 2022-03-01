@@ -9,7 +9,7 @@
   until: download_kibana is succeeded
   when: elastic_install_type == 'remote'
 
-- name: Copy Kibana to managed node
+- name: Copy Kibana to managed nodes yum
   copy:
     src: "files/kibana-{{ elk_version }}-x86_64.rpm"
     mode: 0755

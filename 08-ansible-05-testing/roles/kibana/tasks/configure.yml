@@ -1,4 +1,11 @@
 ---
+- name: create folder for Kibana
+  become: true
+  file:
+    state: directory
+    path: "/etc/kibana/"
+    mode: 0755
+
 - name: Configure Kibana
   become: true
   template:

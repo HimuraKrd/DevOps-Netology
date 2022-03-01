@@ -6,43 +6,50 @@ driver:
 platforms:
   # kibana нужен эластик в качестве базы данных
   - name: elastic
+    hostname: elastic
     groups: 
       - elasticsearch
-    image: docker.io/pycontribs/centos:7
-    pre_build_image: True
-    command: "/usr/sbin/init"
-    privileged: True
-    volume:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+    image: mpaivabarbosa/molecule-systemd-centos:7
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    override_command: false
   
   # платформы для тестирования роли
-  - name: centos7
-    groups: 
-      - kibana
-    image: docker.io/pycontribs/centos:7
-    pre_build_image: True
-    command: "/usr/sbin/init"
-    capabilities:
-      - SYS_ADMIN
-    privileged: True
-    volume:
-      - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  - name: centos-7
+    hostname: centos
+    image: mpaivabarbosa/molecule-systemd-centos:7
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+    override_command: false
   
   - name: centos8
+    hostname: centos8
     groups: 
       - kibana
-    image: docker.io/pycontribs/centos:8
-    pre_build_image: True
+    image: mpaivabarbosa/molecule-systemd-centos:8
+    pre_build_image: true
     command: "/usr/sbin/init"
-    privileged: True
-    volume:
+    privileged: true
+    volumes:
       - "/sys/fs/cgroup:/sys/fs/cgroup:ro" 
+    override_command: false
   
   - name: ubuntu
+    hostname: ubuntu
     groups: 
       - kibana
-    image: docker.io/pycontribs/ubuntu:latest
-    pre_build_image: True
+    image: mpaivabarbosa/molecule-systemd-ubuntu:latest
+    pre_build_image: true
+    priviliged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:ro" 
+    override_command: false
+
+
 provisioner:
   name: ansible
 verifier:

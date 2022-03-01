@@ -13,8 +13,9 @@
     cmd: filebeat modules enable system
     chdir: /usr/share/filebeat/bin
   register: filebeat_modules
-  changed_when: filebeat_modules.stdout != 'Module system is alreade enabled'
-    
+  # changed_when: filebeat_modules.stdout != 'Module system is alreade enabled'
+  changed_when: false  
+
 # - name: enable filebeat service
 #   become: true
 #   service:
