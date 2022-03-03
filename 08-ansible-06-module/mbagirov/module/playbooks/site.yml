@@ -1,0 +1,10 @@
+---
+- name: Assert module create_own
+  hosts: localhost
+  tasks:
+    - name: create file
+      mbagirov.module.create_own:
+        name: "file_created_by_sample_module"
+        path: "/tmp/08-ansible-06-module/"
+        content: "if u see this text - module is working"
+        force: false
