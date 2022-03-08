@@ -258,4 +258,40 @@ mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-06-module$
         content: "if u see this text - module is working"
         force: false
 ```
+Выгрузим коллекцию в новый репозиторий, после чего установим её:
+```shell
+mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-06-module$ cat requirements.yml 
+---
+collections:
+  - name: https://github.com/HimuraKrd/08-ansible-06-module
+    version: 1.0.0
+    type: git
+
+#установим роль
+ansible-galaxy collection install -r requirements.yml -p collection
+
+#зайдём в плейбук и запустим нашу роль, после чего проверим, создался ли файл и какое у него наполнение
+mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-06-module/collection/ansible_collections/mbagirov/module/playbooks$ ansible-playbook site.yml [WARNING]: No inventory was parsed, only implicit localhost is available
+[WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not match 'all'
+
+PLAY [Assert module create_own] ***************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************************
+ok: [localhost]
+
+TASK [create file] ****************************************************************************************************************************************************
+changed: [localhost]
+
+PLAY RECAP ************************************************************************************************************************************************************
+localhost                  : ok=2    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+
+mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-06-module/collection/ansible_collections/mbagirov/module/playbooks$ 
+```
+Проверим наполнение созданного файла по пути ``/tmp/08-ansible-06-module/file_created_by_sample_module```:
+```shell
+mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-06-module/collection/ansible_collections/mbagirov/module/playbooks$ more /tmp/08-ansible-06-module/file_created_by_sample_module
+if u see this text - module is working
+mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-06-module/collection/ansible_collections/mbagirov/module/playbooks$ 
+
+```
 ---
