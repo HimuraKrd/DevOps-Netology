@@ -609,28 +609,120 @@ ok: [ubuntu]
 ok: [centos7]
 ok: [centos8]
 ```
-Проделал те же самые проверки для logstash:
+Проделал те же самые проверки для filebeat:
 ```yaml
-TASK [filebeat : set filebeat systemwork] **************************************
-changed: [centos8]
-changed: [ubuntu]
-changed: [centos7]
-
 PLAY RECAP *********************************************************************
-centos7                    : ok=9    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
-centos8                    : ok=8    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+centos7                    : ok=9    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+centos8                    : ok=8    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
 elastic                    : ok=8    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
 kibana                     : ok=8    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
-ubuntu                     : ok=8    changed=1    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+ubuntu                     : ok=8    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
 
-CRITICAL Idempotence test failed because of the following tasks:
-*  => filebeat : set filebeat systemwork
-*  => filebeat : set filebeat systemwork
-*  => filebeat : set filebeat systemwork
-WARNING  An error occurred during the test sequence action: 'idempotence'. Cleaning up.
+INFO     Idempotence completed successfully.
+INFO     Running default > side_effect
+WARNING  Skipping, side effect playbook not configured.
+INFO     Running default > verify
+INFO     Running Ansible Verifier
+[WARNING]: Could not match supplied host pattern, ignoring: filebeat
+
+PLAY [Verify] ******************************************************************
+skipping: no hosts matched
+
+PLAY RECAP *********************************************************************
+
+INFO     Verifier completed successfully.
 INFO     Running default > cleanup
 WARNING  Skipping, cleanup playbook not configured.
 INFO     Running default > destroy
-[WARNING]: Found both group and host with same name: kibana
+
+PLAY [Destroy] *****************************************************************
+
+TASK [Destroy molecule instance(s)] ********************************************
+changed: [localhost] => (item=elastic)
+changed: [localhost] => (item=kibana)
+changed: [localhost] => (item=centos7)
+changed: [localhost] => (item=centos8)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Wait for instance(s) deletion to complete] *******************************
+FAILED - RETRYING: Wait for instance(s) deletion to complete (300 retries left).
+FAILED - RETRYING: Wait for instance(s) deletion to complete (299 retries left).
+changed: [localhost] => (item=elastic)
+changed: [localhost] => (item=kibana)
+changed: [localhost] => (item=centos7)
+changed: [localhost] => (item=centos8)
+changed: [localhost] => (item=ubuntu)
+
+TASK [Delete docker networks(s)] ***********************************************
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+
+INFO     Pruning extra files from scenario ephemeral directory
+mbagirov@mbagirov-work-linux:~/education/devops-netology/08-ansible-05-testing/roles/filebeat$ 
 ```
----
+---  
+В процессе тестирования через tox были выявлены проблемы и разница в поведении. Так, например, в ubuntu появились проблемы с работой от root пользователя (добавлением become=true в плейбуке). Поэтому пришлось переписать многие куски (актуальная версия загружена в github).  
+Другой проблемой при работы с podman было то, что podman-in-podman не мог запустить контейнеры в namespace по-умолчанию. Для этого пришлось внутри контейнера с подманом отредактировать файл ``/etc/containers/containers.conf``. По-умолчанию в нём стоит следующая конфигурация:
+```shell
+[containers]
+netns="host"
+userns="host"
+ipcns="host"
+utsns="host"
+cgroupns="host"
+cgroups="disabled"
+log_driver = "k8s-file"
+[engine]
+cgroup_manager = "cgroupfs"
+events_logger="file"
+runtime="crun"
+```
+Для работы необходимо заменить занчение параметров ``netns`` и ``utsns`` на ``private``. После изменение плейбука и отредактирования конфигурационного файла tox успешно проходит тестирование:
+``` shell
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+INFO     Pruning extra files from scenario ephemeral directory
+_______________________________________________________________________________ summary _______________________________________________________________________________
+  py36-ansible30: commands succeeded
+  py39-ansible30: commands succeeded
+  congratulations :)
+[root@6afa4d0a9836 kibana]# 
+```
+Проделал ту же самую процедуру для filebeat - результат аналогичен.
+```shell
+  py36-ansible30: commands succeeded
+  py39-ansible30: commands succeeded
+  congratulations :)
+[root@9e676c36c816 filebeat]# 
+```
+
+Также в задаче требуется использовать упрощённый сценарий тестирования. Это достигается путём указания соответствующих шагов (блока scenario) в ``molecule.yml``:
+```yaml
+scenario:
+  test_sequence:
+    - destroy
+    - create
+    - prepare
+    - converge
+    - destroy
+```
+Я добавил сценарий ``tox`` и прописал его для исполнения по умолчанию при вызове tox внутри контейнера (для этого редактируется блок ``commands`` в файле tox.ini):
+```yaml
+[tox]
+minversion = 1.8
+basepython = python3.6
+envlist = py{36,39}-ansible{30}
+skipsdist = true
+
+[testenv]
+deps =
+    -rtox-requirements.txt
+    ansible28: ansible<2.9
+    ansible29: ansible<2.10
+    ansible210: ansible<3.0
+    ansible30: ansible<3.1
+commands =
+    {posargs:molecule test -s tox}
+```

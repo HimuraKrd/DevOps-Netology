@@ -1,7 +1,7 @@
 ---
-- name: restart_filebeat
+- name: restart kibana
   become: true
-  systemd:
-    name: filebeat
+  service:
+    name: kibana
     state: restarted
-    enabled: true
+  when: (ansible_virtualization_type != 'docker') or (ansible_virtualization_type != 'kvm') or (ansible_connection != "community.docker.docker")

@@ -1,8 +1,6 @@
 galaxy_info:
-  author: Maxim Bagirov
-  role_name: filebeat
-  namespace: workspace
-  description: role
+  author: Maxim Bagirov 
+  description: role for kibana installation tested with molecule and tox
   company: your company (optional)
 
   # If the issue tracker for your role is not on github, uncomment the

@@ -1,0 +1,15 @@
+# molecule==3.6.1
+# molecule_podman==1.1.0
+# podman
+# selinux
+# ansible-lint
+# yamllint
+# six
+# urllib3
+# git
+
+molecule==3.4.0
+molecule_docker
+docker
+ansible-lint
+yamllint

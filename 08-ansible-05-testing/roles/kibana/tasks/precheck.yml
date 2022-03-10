@@ -3,3 +3,10 @@
   fail:
     msg: "System {{ ansible_distribution }} is not support by this role"
   when: ansible_distribution not in supported_systems
+
+- name: Check files directory exists
+  file:
+    name: files/
+    state: directory
+  run_once: true
+  delegate_to: localhost

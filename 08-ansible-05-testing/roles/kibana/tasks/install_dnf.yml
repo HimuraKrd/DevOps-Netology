@@ -1,30 +1,24 @@
 ---
 - name: Download GPG-KEY dnf
+  # hosts: centos8
   become: true
   command: 
     cmd: "rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch"
   changed_when: false
 
 - name: fix repo issue of Centos8-change mirror
+  # hosts: centos8
   become: true
   shell: |
     sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* 
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
-# - name: Install kibana
-#   become: true
-#   dnf:
-#     name: "/tmp/kibana-{{ elk_version }}-x86_64.rpm"
-#     state: present
-#     disablerepo: "appstream,baseos,epel,epel-modular,extras"
-#     disable_gpg_check: yes
-#   notify: restart kibana
-
-- name: install Kibana dnf
+- name: Install kibana
+  # hosts: centos8
   become: true
   dnf:
     name: "/tmp/kibana-{{ elk_version }}-x86_64.rpm"
+    state: present
     disablerepo: "appstream,baseos,epel,epel-modular,extras"
     disable_gpg_check: yes
-    state: present
   # notify: restart kibana

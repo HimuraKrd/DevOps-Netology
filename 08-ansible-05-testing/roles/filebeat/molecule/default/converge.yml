@@ -1,14 +1,7 @@
-- name: elk-elasticsearch
-  hosts: elastic
-  roles:
-    - elastic
-
-- name: elk-kibana
-  hosts: kibana
-  roles:
-    - kibana
-
-- name: filebeat
-  hosts: filebeat
-  roles:
-    - filebeat
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include filebeat"
+      include_role:
+        name: "filebeat"

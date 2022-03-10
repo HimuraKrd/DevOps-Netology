@@ -1,6 +1,6 @@
 ---
 - name: configure filebeat
-  become: true
+  # become: true
   template:
     src: filebeat.yml.j2
     mode: 0644
@@ -8,7 +8,7 @@
   # notify: restart_filebeat
 
 - name: set filebeat systemwork
-  become: true
+  # become: true
   command:
     cmd: filebeat modules enable system
     chdir: /usr/share/filebeat/bin

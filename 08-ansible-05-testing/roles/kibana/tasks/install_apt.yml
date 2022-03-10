@@ -1,7 +1,12 @@
 ---
+- name: add localhost to ubuntu devices
+  command: 
+    cmd: "echo 127.0.0.1   ubuntu >> /etc/hosts"
+
 - name: Install Kibana apt
-  become: true
   apt:
     deb: "/tmp/kibana-{{ elk_version }}-amd64.deb"
     state: present
   # notify: restart kibana
+
+
