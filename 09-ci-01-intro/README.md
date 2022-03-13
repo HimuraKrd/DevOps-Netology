@@ -29,8 +29,19 @@
 
 ---
 
-### Как оформить ДЗ?
+# Решение 
 
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
+Создал 2 workflow, согласно задаче:  
+для задач типа bug:  
+![image](https://user-images.githubusercontent.com/68470186/158061438-d36a8f79-ee3a-416e-a58e-34323f95f52d.png)  
+для все хостальных задач:  
+![image](https://user-images.githubusercontent.com/68470186/158061485-52270f75-cc84-4291-bd36-2f70c483364f.png)  
+
+В ``Settings -> Issues -> Workflow schemes`` добавил новух схему по названию лекции:  
+![image](https://user-images.githubusercontent.com/68470186/158061544-398bdd13-7a73-4962-bac1-9c03e0a62ac1.png)
+Далее в `` Project -> Settings -> Workflows`` изменил смеху по-умолчанию:  
+![image](https://user-images.githubusercontent.com/68470186/158061602-e5d4385c-3a57-4380-8cce-0a6027136ca4.png)
+
+Добавил доску ``scrum`` и прогнал задачи, согласно ТЗ. XML смехы во вложении.
 
 ---
