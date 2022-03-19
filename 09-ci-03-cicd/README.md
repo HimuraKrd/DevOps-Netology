@@ -58,8 +58,38 @@
 
 ---
 
-### Как оформить ДЗ?
+# Решение
+Поднял две виртуальные машины в YC:  
+![image](https://user-images.githubusercontent.com/68470186/159119896-b1f430fe-6869-4afd-8ab1-da7332de067e.png)  
+И прогнал по ним оба плейбука:
+![image](https://user-images.githubusercontent.com/68470186/159119913-8cd8f4e3-a901-4a21-8a90-8ce41df49cd4.png) 
+Сервисы успешно запустились:  
+![image](https://user-images.githubusercontent.com/68470186/159120012-68f60a3b-b0a5-4674-b5ba-bc4886970b7a.png)  
+![image](https://user-images.githubusercontent.com/68470186/159120013-1365a6a5-ce7b-415b-8eaa-a97630e61d79.png)  
+  
+По ``sonar``: выполнил все требования по установке и забросил код на анализ:  
+![image](https://user-images.githubusercontent.com/68470186/159120029-1de93332-c76a-4043-943c-a55970cbe8ee.png)  
+В результате увидел следующие ошибки:  
+![image](https://user-images.githubusercontent.com/68470186/159120036-5859df01-0576-438e-aaac-299a005210c1.png)  
+Изменил код, устанив ошибки:  
+![image](https://user-images.githubusercontent.com/68470186/159120061-08d11784-505e-49fa-8e87-8804a0fec5fa.png)  
+После повторгого прогона ошибок не возникало:  
+![image](https://user-images.githubusercontent.com/68470186/159120069-91506ffa-ba4f-4216-92a0-d10f393dfa8d.png)  
+![image](https://user-images.githubusercontent.com/68470186/159120084-7d31408b-fd83-4c1c-8563-339830aa6193.png)  
+  
+по ``Nexus`` и ``Maven``:  
+Загрузил два одинаковых файла согласно условиям:  
+![image](https://user-images.githubusercontent.com/68470186/159120107-a044f841-8b79-4c6b-8b28-47cfe0e95e9d.png)  
+![image](https://user-images.githubusercontent.com/68470186/159120110-509e6585-9044-4bf3-8e97-427825f9bbf0.png)  
+После загрузки ``maven-metadata.xlm`` выглядит вот так:  
+![image](https://user-images.githubusercontent.com/68470186/159120132-1fa1da1f-6067-41dc-9c54-eb16975c0e80.png)  
+![image](https://user-images.githubusercontent.com/68470186/159120141-aba88fff-e9df-4ed7-b453-3f8e970ca872.png)  
+Изменил настройки POM-ника и запустил ``maven package`` из директории с ``pom.xml``:  
+![image](https://user-images.githubusercontent.com/68470186/159120160-00e3a504-5ed8-4d4f-845b-89037a0e9b2d.png)  
+В результате получил артефакт:  
+![image](https://user-images.githubusercontent.com/68470186/159120164-9277f8b2-c8f7-4c56-a0fc-f342c4645633.png)  
+Исправленый файл ``pom.xml`` находится в том же разделе, где и был раньше.
 
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
+
 
 ---
