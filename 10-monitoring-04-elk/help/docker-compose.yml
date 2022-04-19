@@ -69,11 +69,11 @@ services:
     image: logstash:7.17.0
     container_name: logstash
     ports:
-      - 5044:5044
-      # - 5046:5046
+      # - 5044:5044
+      - 5046:5046
     volumes:
-      - ./configs/logstash.conf:/etc/logstash/conf.d/logstash.conf:ro
-      - ./configs/logstash.yml:/opt/logstash/config/logstash.yml:ro
+      - ./configs/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:Z
+      - ./configs/logstash.yml:/usr/share/logstash/config/logstash.yml:Z
     networks:
       - elastic
     depends_on:
@@ -101,6 +101,8 @@ services:
     volumes:
       - ./pinger/run.py:/opt/run.py
     entrypoint: python3 /opt/run.py
+    networks:
+      - elastic
 
 volumes:
   data-es-hot:
