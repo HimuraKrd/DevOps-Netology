@@ -58,9 +58,19 @@ Filebeat следует сконфигурировать для отправки
  
 ---
 
-### Как оформить ДЗ?
+### Решение
+К сожалению, мой ноутбук слишком слабый и начинает очень сильно тормозить уже через минуту после запуска стэка. Поэтому часть скриншотов из WSL, а часть из Linux (Kubuntu). Интерфейс Kibana выглядит так:  
+![image](https://user-images.githubusercontent.com/68470186/163961633-265af631-4fa2-4a17-8971-8305e33dfd90.png)  
+Все сервисы запущены:  
+![image](https://user-images.githubusercontent.com/68470186/163961795-7cf74e0b-e16d-4ae8-ba62-87c093189974.png)  
+Очень долго боролся с тем, что данные в Elasticsearch не подтягивались и появлялось вот такое окно:  
+![image](https://user-images.githubusercontent.com/68470186/163961876-0974005c-9ef5-487b-a265-4326117a83f5.png)  
+Проблека оказалась в неправильном подключении ``volume`` в сервис Logstash. После исправления данные появились:  
+![image](https://user-images.githubusercontent.com/68470186/163962023-a61351e5-c55f-47c4-9879-b38c3a281ae6.png)  
+Создал индекс и увидел по нему вот такую статистику:  
+![image](https://user-images.githubusercontent.com/68470186/163962086-5aeddf67-e347-408c-94bb-44022ad87ade.png)  
+![image](https://user-images.githubusercontent.com/68470186/163962124-a9281dfb-a3bf-4fa2-aa83-24c44dd4f48d.png)
 
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
 
 ---
 
