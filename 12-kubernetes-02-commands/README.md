@@ -11,6 +11,18 @@
  * наличие deployment можно проверить командой kubectl get deployment
  * наличие подов можно проверить командой kubectl get pods
 
+В прошлом задании было запущено 3 реплики в деплойменте при помощи команды: ``kubectl create deployment hello-node --image=k8s.gcr.io/echoserver:1.4 --replicas 3``. В результате получилось:  
+```bash
+[mbagirov@centos7 k8s-12]$ kubectl -n demo get deployment
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+hello-node   3/3     3            3           15m
+[mbagirov@centos7 k8s-12]$ kubectl -n demo get po
+NAME                          READY   STATUS    RESTARTS   AGE
+hello-node-6b89d599b9-cnh67   1/1     Running   0          15m
+hello-node-6b89d599b9-pq5dx   1/1     Running   0          15m
+hello-node-6b89d599b9-qtcxd   1/1     Running   0          15m
+```
+
 
 ## Задание 2: Просмотр логов для разработки
 Разработчикам крайне важно получать обратную связь от штатно работающего приложения и, еще важнее, об ошибках в его работе. 
@@ -21,6 +33,64 @@
  * пользователь прописан в локальный конфиг (~/.kube/config, блок users)
  * пользователь может просматривать логи подов и их конфигурацию (kubectl logs pod <pod_id>, kubectl describe pod <pod_id>)
 
+Создадим сервисный аккаунт:
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: developer
+  namespace: demo
+```
+Создадим роль:
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: developer-role
+  namespace: demo
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list", "describe"]
+```
+Эта роль позволит обращаться к подам и их логам в неймспейсе demo.  
+Привяжем роль к сервисному аккаунту:
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pods-logs
+  namespace: demo
+subjects:
+- kind: ServiceAccount
+  name: developer
+  namespace: demo
+roleRef:
+  kind: Role
+  name: developer-role # this must match the name of the Role or ClusterRole you wish to bind to
+  apiGroup: rbac.authorization.k8s.io
+```
+Получаем связку сервисный аккаунт-роль-неймспейс. Тем самым при обращении к kube-api в нейсмпейсе от имени сервисного акканта появляется возможность использовать глаголы ``get`` и ``list`` для ресурсов ``pods`` и подресурса ``pods/logs``.  
+  
+Для проверки вызовем список подов в неймспейсе ``demo``от имени сервисного аккаунта, используя конструкцию ``--as=system:serviceaccount:{namespace}:{user}``: 
+```bash
+[mbagirov@centos7 k8s-12]$ kubectl get pods --as=system:serviceaccount:demo:developer -n demo
+NAME                          READY   STATUS    RESTARTS   AGE
+hello-node-6b89d599b9-cnh67   1/1     Running   0          21m
+hello-node-6b89d599b9-pq5dx   1/1     Running   0          21m
+hello-node-6b89d599b9-qtcxd   1/1     Running   0          21m
+```
+Попробуем получить список всех секретов в том же самом неймспейсе:
+```bash
+[mbagirov@centos7 k8s-12]$ kubectl -n demo get secrets --as=system:serviceaccount:demo:developer
+Error from server (Forbidden): secrets is forbidden: User "system:serviceaccount:demo:developer" cannot list resource "secrets" in API group "" in the namespace "demo"
+```
+Или список POD-ов, но в нейсмпейсе kube-sustem:
+```bash
+[mbagirov@centos7 k8s-12]$ kubectl -n kube-system get po --as=system:serviceaccount:demo:developer
+Error from server (Forbidden): pods is forbidden: User "system:serviceaccount:demo:developer" cannot list resource "pods" in API group "" in the namespace "kube-system"
+```
+
 
 ## Задание 3: Изменение количества реплик 
 Поработав с приложением, вы получили запрос на увеличение количества реплик приложения для нагрузки. Необходимо изменить запущенный deployment, увеличив количество реплик до 5. Посмотрите статус запущенных подов после увеличения реплик. 
@@ -29,10 +99,22 @@
  * в deployment из задания 1 изменено количество реплик на 5
  * проверить что все поды перешли в статус running (kubectl get pods)
 
----
+Увеличим количество реплик в деплойменте и проверим их состояние:
+```bash
+[mbagirov@centos7 k8s-12]$ kubectl -n demo get po
+NAME                          READY   STATUS    RESTARTS   AGE
+hello-node-6b89d599b9-cnh67   1/1     Running   0          21m
+hello-node-6b89d599b9-pq5dx   1/1     Running   0          21m
+hello-node-6b89d599b9-qtcxd   1/1     Running   0          21m
 
-### Как оформить ДЗ?
+[mbagirov@centos7 k8s-12]$ kubectl -n demo scale deployment hello-node --replicas=5
+deployment.apps/hello-node scaled
 
-Выполненное домашнее задание пришлите ссылкой на .md-файл в вашем репозитории.
-
----
+[mbagirov@centos7 k8s-12]$ kubectl -n demo get po
+NAME                          READY   STATUS    RESTARTS   AGE
+hello-node-6b89d599b9-2rkhh   1/1     Running   0          8s
+hello-node-6b89d599b9-cnh67   1/1     Running   0          27m
+hello-node-6b89d599b9-pq5dx   1/1     Running   0          27m
+hello-node-6b89d599b9-qtcxd   1/1     Running   0          27m
+hello-node-6b89d599b9-sg57q   1/1     Running   0          8s
+```
