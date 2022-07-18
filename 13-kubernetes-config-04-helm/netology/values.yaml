@@ -1,0 +1,28 @@
+---
+replicaCount:
+  db: 1
+  frontend: 2
+  backend: 2
+
+namespace: app1
+
+service:
+  type: ClusterIP
+  port:
+    frontend: 8000
+    backend: 9000
+    db: 5432
+  targetPort:
+    frontend: 80
+    backend: 9000
+    db: 5432
+
+metadata:
+  pv:
+    name: pv-prod
+  pvc:
+    name: pvc-prod
+  frontend:
+    name: frontend
+  backend:
+    name: backend

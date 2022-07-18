@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{.Release.Name}}-{{ .Values.metadata.frontend.name}}-svc
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Values.metadata.frontend.name}}
+  ports:
+    - name: {{ .Values.metadata.frontend.name}}
+      protocol: TCP
+      port: 8080
+      targetPort: {{ .Values.service.targetPort.frontend }}

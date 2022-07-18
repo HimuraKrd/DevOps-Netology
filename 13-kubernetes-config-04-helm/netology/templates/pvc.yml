@@ -1,0 +1,13 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{.Release.Name}}-{{.Values.metadata.pvc.name}}
+  namespace: {{ .Values.namespace }}
+spec:
+  resources:
+    requests:
+      storage: 1G
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany

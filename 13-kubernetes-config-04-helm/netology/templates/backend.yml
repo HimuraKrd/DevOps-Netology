@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-{{ .Values.metadata.backend.name}}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.backend  }}
+  selector:
+    matchLabels:
+      app: {{ .Values.metadata.backend.name}}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.metadata.backend.name}}
+    spec:
+      containers:
+      - name: {{ .Values.metadata.backend.name}}
+        image: mbagirov/netology-13-backend
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: {{ .Values.service.targetPort.backend }}
+        env:
+        - name: DATABASE_URL
+          value: postgres://postgres:postgres@postgres:5432/news
+        volumeMounts:
+          - name: {{.Release.Name}}-{{.Values.metadata.pv.name}}
+            mountPath: "/static/pv"
+      volumes: 
+        - name: {{.Release.Name}}-{{.Values.metadata.pv.name}}
+          persistentVolumeClaim:
+            claimName: {{.Release.Name}}-{{.Values.metadata.pvc.name}}

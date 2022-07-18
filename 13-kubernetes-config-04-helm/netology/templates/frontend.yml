@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Release.Name}}-{{ .Values.metadata.frontend.name}}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.frontend  }}
+  selector:
+    matchLabels:
+      app: {{ .Values.metadata.frontend.name}}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.metadata.frontend.name}}
+    spec:
+      containers:
+      - name: {{ .Values.metadata.frontend.name}}
+        image: mbagirov/netology-13-front
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env: 
+        - name: BASE_URL
+          value: http://localhost:9000
+        volumeMounts:
+        - mountPath: "/static/pv"
+          name: {{.Release.Name}}-{{.Values.metadata.pv.name}}
+      volumes: 
+        - name: {{.Release.Name}}-{{.Values.metadata.pv.name}}
+          persistentVolumeClaim:
+            claimName: {{.Release.Name}}-{{.Values.metadata.pvc.name}}

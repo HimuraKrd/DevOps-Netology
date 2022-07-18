@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{.Release.Name}}-db
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicaCount.db  }}
+  selector:
+    matchLabels:
+      app: db
+  serviceName: db
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: db
+        image: postgres:13-alpine
+        ports:
+        - containerPort: {{ .Values.service.targetPort.db }}
+        volumeMounts:
+        - name: db-data
+          mountPath: "/var/lib/postgresql/data"
+        env:
+        - name: POSTGRES_PASSWORD
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_DB
+          value: news
