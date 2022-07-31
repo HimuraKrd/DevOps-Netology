@@ -90,7 +90,7 @@ font-family: Tahoma, Verdana, Arial, sans-serif; }
 </head>
 <body>
 <h1>Welcome to nginx!</h1>
-<p><b>This file comes from the secret k8s object</b></p>
+<p>This file comes from the secret k8s object</p>
 <p>If you see this page, the nginx web server is successfully installed and
 working. Further configuration is required.</p>
 
@@ -216,3 +216,11 @@ Commercial support is available at
 </body>
 </html>
 ```
+Посмотрим состояние нод:
+```bash
+kubectl get nodes -o wide                                                    
+NAME       STATUS   ROLES                  AGE   VERSION   INTERNAL-IP    EXTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+minikube   Ready    control-plane,master   37d   v1.23.3   192.168.49.2   <none>        Ubuntu 20.04.4 LTS   5.15.0-41-generic   docker://20.10.17
+```
+Перейдём по адресу, добавив адрес ``NodePort``:
+![image](https://user-images.githubusercontent.com/68470186/182029560-fe4d9786-87e7-4546-9d11-83a875fcee29.png)
