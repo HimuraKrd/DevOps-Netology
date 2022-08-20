@@ -69,7 +69,7 @@ kubectl create configmap domain --from-literal=name=netology.ru
 ```
 Удостоверимся, что они появились:
 ```
-kubectl get cm                                                           ✔  at minikube ⎈  at 17:14:30   
+kubectl get cm
 NAME               DATA   AGE
 domain             1      2s
 kube-root-ca.crt   1      57d
@@ -101,4 +101,6 @@ Hello
 root@nginx:/# echo $phrase2
 World
 ```
+Проверим, что отображение стандартного приветствия от nginx изменено, перейдя по адресу узла и добавив nodePort:  
+![image](https://user-images.githubusercontent.com/68470186/185760813-5874214c-cd3d-440d-b751-ea4ff500cb85.png)
 ---
