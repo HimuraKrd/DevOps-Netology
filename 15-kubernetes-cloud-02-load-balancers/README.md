@@ -50,3 +50,28 @@ chkconfig httpd on
 cd /var/www/html
 echo "<html><h1>My cool web-server</h1></html>" > index.html
 ```
+
+---
+## Решение
+При помощи манифестов терраформ создал требуемые ресурсы:  
+* виртуальные машины
+
+![image](https://user-images.githubusercontent.com/68470186/188324209-c8c7bef3-1fd5-4e77-b961-a5844705fcc2.png)
+* балансировщик
+
+![image](https://user-images.githubusercontent.com/68470186/188324235-8fdcfe28-9813-477f-8ef3-bc6ef0a24f31.png)  
+![image](https://user-images.githubusercontent.com/68470186/188324250-06d383ed-f343-4013-8adc-ba68dca14217.png)
+* целевую группу
+
+![image](https://user-images.githubusercontent.com/68470186/188324271-babff0c4-3244-4b71-9c1c-8c05a45d7121.png)
+* группу виртуальных машин
+
+![image](https://user-images.githubusercontent.com/68470186/188324324-f5d5751e-6ddb-4d28-88c3-283bb051ebb7.png)  
+![image](https://user-images.githubusercontent.com/68470186/188324337-48fe162f-dfc5-4d29-836b-2cce64e4500b.png)  
+* бакет и загрузил туда картинку при помощи скрипта
+
+![image](https://user-images.githubusercontent.com/68470186/188324472-99223441-70aa-4354-9e71-a2d22f0664bf.png)
+  
+Перешёл по адресу балансировщика:  
+![image](https://user-images.githubusercontent.com/68470186/188324299-ee14891b-9890-4159-a872-722e06bd5964.png)  
+Удалил 2 машины, но доступ к изображению сохранился, т.к. балансировщик перенаправлял траффик на живую ноду.
