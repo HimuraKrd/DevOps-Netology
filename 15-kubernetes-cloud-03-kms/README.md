@@ -49,3 +49,7 @@ aws s3 cp index.html s3://mysuperbacketname2021
 ```
 
 
+При помощи скриптов terraform создал бакет, зашифровал его при помощи ключа:  
+![image](https://user-images.githubusercontent.com/68470186/191590109-960d578f-f49a-448f-843c-26a43acc6342.png)  
+![image](https://user-images.githubusercontent.com/68470186/191590148-9ab12783-574e-4c0d-b449-59b92e700df4.png)  
+![image](https://user-images.githubusercontent.com/68470186/191590213-8f7d060f-d2e0-429f-b0c2-055f056315a1.png)  
